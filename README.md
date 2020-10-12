@@ -11,8 +11,8 @@ Models and its property for client related information.
   > This model will be used to reprensent a client in the database.
   > It contains name, balance, membership tier, transaction history of a customer. 
   
-  | __`Member`__ | Usage                  | DataType                                  |
-  |--------------|------------------------|-------------------------------------------|
+  | __`Member`__        | Usage                  | DataType                                  |
+  |---------------------|------------------------|-------------------------------------------|
   | id                  | Primary key            | *`AutoField`*                             |
   | name                | Customer name          | *`CharField`*                             |
   | phone               | Customer phone number  | *`CharField`*                             |
@@ -100,4 +100,8 @@ Models and its property for staff related information.
 - WorkShift
 
 - TransactionMethod
+  | __`TransactionMethod`__ | Usage              | DataType                                               |
+  |-------------------------|--------------------|--------------------------------------------------------|
+  | id                      | Primary key        | *`AutoField`*                                          |
+  | method                  | Transaction method | *`CharField`* ["Cash", "Credit card", "ETM", "Alipay", "WeChat"] |
 
