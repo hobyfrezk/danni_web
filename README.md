@@ -7,7 +7,7 @@ Data models for Django backend.
 ### Client Related Models
 Models and its property for client related information.
 
-- Member
+#### Member
   > This model will be used to reprensent a client in the database.
   > It contains name, balance, membership tier, transaction history of a customer. 
   
@@ -25,7 +25,7 @@ Models and its property for client related information.
 ### Staff side
 Models and its property for staff related information.
 
-- Staff
+#### Staff
   > This model will be used to reprensent a client in the database. 
   > It contains name, balance, membership tier, transaction history of a customer. 
   
@@ -40,7 +40,7 @@ Models and its property for staff related information.
   
 ### Management side
 
-- Tier
+#### Tier
   > Membership tier that can be set for each customer with membership.
   
   | __`Tier`__ | Usage                                  | DataType         |
@@ -49,7 +49,7 @@ Models and its property for staff related information.
   | name       | Tier name                              | *`CharField`*    |
   | discount   | Discount given by this membership tier | *`DecimalField`* |
   
-- Service Category
+#### Service Category
   > Category of provided service
   
   | __`Category`__  | Usage                            | DataType                              |
@@ -58,7 +58,7 @@ Models and its property for staff related information.
   | name            | Category name                    | *`CharField`*                         |
   | services        | Services belong to this category | `Queryset` of __`Service`__ data type |
   
-- Service
+#### Service
   > Model of services that can be provided by the salon. Each service must belong to a category (many to one relationship -> ForeignKey) and can be provided by multiple staffs (many to many relationships -> ManyToManyField)
   
   | __`Service`__  | Usage                                    | DataType                                     |
@@ -69,7 +69,7 @@ Models and its property for staff related information.
   | category       | Category that this service belongs to    | *`ForeignKey`* of __`Category`__ data type   |
   | staffs         | Staffs that able to provide this service | *`ManyToManyField`* of __`Staff`__ data type |
   
-- Appointment
+#### Appointment
   > Appointment can be made online by customer and it contains the infomation about the customer who made it, the staff it related to and the reserved time of it, also it could optionally contains the services required by the customer.
  
   | __`Appointment`__ | Usage                                       | DataType                                    |
@@ -80,7 +80,7 @@ Models and its property for staff related information.
   | staff             | Optional, Required staff                    | *`ForeignKey`* of __`Staff`__ data type     |
   | services          | Optional, required service made by customer | *`List`* of __`Service`__ data type         |
 
-- Transaction
+#### Transaction
   > Transaction contains infomation such as: ① customer who made this transaction, ② provided services and ③ who provide these services, how the payments was made: how much of the ④ balance deduction and ⑤ non-balance pay, for the non-balance pay, should also specify ⑥ the transaction method (option: cash, credit card, ETM, Alipay, Wechat), ⑦ tax, ⑧ tips and ⑨ transaction date.
   
   | __`Transaction`__  | Usage                                 | DataType                                                    |
@@ -98,7 +98,7 @@ Models and its property for staff related information.
   | tips               | Amount of tips                        | *`DecimalField`*                                            |
   | time               | Datetime of this transaction          | *`DateTimeField`*                                           |
 
-- WorkShift
+#### WorkShift
   > WorkShift model is used to orgnize staff shift priod. It contains start time of the shift, duration of the shift for a staff.
   
   | __`WorkShift`__ | Usage                         | DataType                                |
@@ -110,7 +110,7 @@ Models and its property for staff related information.
   | duration        | duration of this work shift   | end_time - start_time                   |
   
 
-- TransactionMethod
+#### TransactionMethod
   | __`TransactionMethod`__ | Usage              | DataType                                               |
   |-------------------------|--------------------|--------------------------------------------------------|
   | id                      | Primary key        | *`AutoField`*                                          |
