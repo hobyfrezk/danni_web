@@ -90,7 +90,8 @@ Models and its property for staff related information.
   | member             | Customer                              | *`ForeignKey`* of __`Member`__ data type                    |
   | services           | Service provided for this transaction | *`List`* of __`Service`__ data type                         |
   | staff              | Staff who take this customer          | *`ForeignKey`* of __`Staff`__ data type                     |
-  | balanace_deduction | Amount deducted from balance          | *`DecimalField`*                                            |
+  | balanace_before    | Balance before this transaction       | *`DecimalField`*                                            |
+  | balanace_before    | Balance after this transaction        | *`DecimalField`*                                            |
   | non_balance_pay    | Amount payed except balance           | *`DecimalField`*                                            |
   | method             | Transaction method                    | *`ForeignKey`* of __`TransactionMethod`__ data type         |
   | tax                | Amount of tax                         | *`dict`* {"pst": *`DecimalField`*, "gst": *`DecimalField`*} |
@@ -98,6 +99,16 @@ Models and its property for staff related information.
   | time               | Datetime of this transaction          | *`DateTimeField`*                                           |
 
 - WorkShift
+  > WorkShift model is used to orgnize staff shift priod. It contains start time of the shift, duration of the shift for a staff.
+  
+  | __`WorkShift`__ | Usage                         | DataType                                |
+  |-----------------|-------------------------------|-----------------------------------------|
+  | id              | Primary key                   | *`AutoField`*                           |
+  | staff           | Staff of this work shift      | *`ForeignKey`* of __`Staff`__ data type |
+  | start_time      | start time of this work shift | *`DateTimeField`*                       |
+  | end_time        | end time of this work shift   | *`DateTimeField`*                       |
+  | duration        | duration of this work shift   | end_time - start_time                   |
+  
 
 - TransactionMethod
   | __`TransactionMethod`__ | Usage              | DataType                                               |
