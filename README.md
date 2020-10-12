@@ -13,11 +13,14 @@ Models and its property for client related information.
   
   | __`Member`__ | Usage                  | DataType                                  |
   |--------------|------------------------|-------------------------------------------|
-  | id           | Primary key            | *`AutoField`*                             |
-  | name         | Customer name          | *`CharField`*                             |
-  | balance      | Balance of the account | *`DecimalField`*                          |
-  | tier         | Membership tier        | *`ForeignKey`* of __`Tier`__ data type    |
-  | transactions | Transaction history    | `Queryset` of __`Transaction`__ data type |
+  | id                  | Primary key            | *`AutoField`*                             |
+  | name                | Customer name          | *`CharField`*                             |
+  | phone               | Customer phone number  | *`CharField`*                             |
+  | balance             | Balance of the account | *`DecimalField`*                          |
+  | tier                | Membership tier        | *`ForeignKey`* of __`Tier`__ data type    |
+  | transactions        | Transaction history    | `Queryset` of __`Transaction`__ data type |
+  | appointments_past   | Past appointments      | `Queryset` of __`Appointment`__ data type |
+  | appointments_active | Active appointments    | `Queryset` of __`Appointment`__ data type |
 
 ### Staff side
 Models and its property for staff related information.
@@ -67,6 +70,34 @@ Models and its property for staff related information.
   | staffs         | Staffs that able to provide this service | *`ManyToManyField`* of __`Staff`__ data type |
   
 - Appointment
+  > Appointment can be made online by customer and it contains the infomation about the customer who made it, the staff it related to and the reserved time of it, also it could optionally contains the services required by the customer.
+ 
+  | __`Appointment`__ | Usage                                       | DataType                                    |
+  |-------------------|---------------------------------------------|---------------------------------------------|
+  | id                | Primary key                                 | *`AutoField`*                               |
+  | member            | Client who made the appointment             | *`ForeignKey`* of __`Member`__ data type    |
+  | time              | Appointment time                            | *`ForeignKey`* of __`ShiftTime`__ data type |
+  | staff             | Optional, Required staff                    | *`ForeignKey`* of __`Staff`__ data type     |
+  | services          | Optional, required service made by customer | *`List`* of __`Service`__ data type         |
+
 - Transaction
+  > Transaction contains infomation such as: ① customer who made this transaction, ② provided services and ③ who provide these services, how the payments was made: how much of the ④ balance deduction and ⑤ non-balance pay, for the non-balance pay, should also specify ⑥ the transaction method (option: cash, credit card, ETM, Alipay, Wechat), ⑦ tax, ⑧ tips and ⑨ transaction date.
+  
+  | __`Transaction`__  | Usage                                 | DataType                                                    |
+  |--------------------|---------------------------------------|-------------------------------------------------------------|
+  | id                 | Primary key                           | *`AutoField`*                                               |
+  | create_time        | Datetime                              | *`DateField.auto_now_add`*                                  |
+  | member             | Customer                              | *`ForeignKey`* of __`Member`__ data type                    |
+  | services           | Service provided for this transaction | *`List`* of __`Service`__ data type                         |
+  | staff              | Staff who take this customer          | *`ForeignKey`* of __`Staff`__ data type                     |
+  | balanace_deduction | Amount deducted from balance          | *`DecimalField`*                                            |
+  | non_balance_pay    | Amount payed except balance           | *`DecimalField`*                                            |
+  | method             | Transaction method                    | *`ForeignKey`* of __`TransactionMethod`__ data type         |
+  | tax                | Amount of tax                         | *`dict`* {"pst": *`DecimalField`*, "gst": *`DecimalField`*} |
+  | tips               | Amount of tips                        | *`DecimalField`*                                            |
+  | time               | Datetime of this transaction          | *`DateTimeField`*                                           |
+
 - WorkShift
+
+- TransactionMethod
 
