@@ -76,7 +76,9 @@ Models and its property for staff related information.
   |-------------------|---------------------------------------------|---------------------------------------------|
   | id                | Primary key                                 | *`AutoField`*                               |
   | member            | Client who made the appointment             | *`ForeignKey`* of __`Member`__ data type    |
-  | time              | Appointment time                            | *`ForeignKey`* of __`ShiftTime`__ data type |
+  | time_start        | Appointment start time                      | *`DateTimeField`*                           |
+  | time_end          | Appointment end time                        | *`DateTimeField`*                           |
+  | shift_time        | Devoted shift time for this appointment     | *`ForeignKey`* of __`ShiftTime`__ data type |
   | staff             | Optional, Required staff                    | *`ForeignKey`* of __`Staff`__ data type     |
   | services          | Optional, required service made by customer | *`List`* of __`Service`__ data type         |
 
