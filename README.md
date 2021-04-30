@@ -1,4 +1,4 @@
-# DanniWeb
+# Danni Web
 A Django + React web application for Nails salon.
 
 ## Data models
