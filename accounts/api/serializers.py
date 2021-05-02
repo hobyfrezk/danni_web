@@ -1,3 +1,5 @@
+from abc import ABC
+
 from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions
 
@@ -12,6 +14,14 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+    def validate(self, data):
+        # check if user exists
+        if not User.objects.filter(username=data['username'].lower()).exists():
+            raise exceptions.ValidationError({
+                'username': "User does not exist."
+            })
+        return data
+
 
 class SignupSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=6)
@@ -22,19 +32,35 @@ class SignupSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email', 'password')
 
+    def is_valid_username(self, username):
+        if len(username) < 8 or len(username) > 30:
+            return False
+        if '_' == username[0]:
+            return False
+        if ' ' in username:
+            return False
+
+        return True
+
     def validate(self, data):
+        username = data['username'].lower()
+        email = data['email'].lower()
+
+        # TODO: check username validity
+        if not self.is_valid_username(username):
+            raise exceptions.ValidationError({
+                'username': "Username is not valid."
+            })
+
         # check username and email already exists.
-        if User.objects.filter(username=data['username'].lower()).exists():
+        if User.objects.filter(username=username).exists():
             raise exceptions.ValidationError({
                 'username': "This username has been occupied."
             })
-        if User.objects.filter(email=data['email'].lower()).exists():
+        if User.objects.filter(email=email).exists():
             raise exceptions.ValidationError({
                 'email': "This email has been occupied."
             })
-
-        # TODO: check username validity
-
         return data
 
     def create(self, validated_data):
@@ -47,5 +73,4 @@ class SignupSerializer(serializers.ModelSerializer):
             email=email,
             password=password,
         )
-
         return user

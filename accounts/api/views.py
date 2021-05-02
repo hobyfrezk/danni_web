@@ -26,7 +26,6 @@ class UserViewSet(viewsets.ModelViewSet):
 class AccountViewSet(viewsets.ViewSet):
     """
     API endpoints that allows: signup, login, login status, logout
-
     """
 
     serializer_class = SignupSerializer
@@ -66,18 +65,8 @@ class AccountViewSet(viewsets.ViewSet):
 
         username = serializer.validated_data['username'].lower()
         password = serializer.validated_data['password']
-
-        # check user exists
-        if not User.objects.filter(username=username):
-            return Response({
-                "success": False,
-                "message": "Please check input.",
-                "errors": {
-                    "username": ["User does not exist."]
-                }
-            }, status=400)
-
         user = django_authenticate(username=username, password=password)
+
         if not user or user.is_anonymous:
             return Response({
                 "success": False,
@@ -85,7 +74,6 @@ class AccountViewSet(viewsets.ViewSet):
             }, status=400)
 
         django_login(request, user)
-
         user_data = {
             "id": user.id,
             "username": user.username,

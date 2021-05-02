@@ -124,33 +124,16 @@ class SignupAPITests(TestCase):
         self.assertEqual(response.data['success'], False)
 
     def test_not_valid_parameters(self):
-        # not valid username: too short < 8, too long > 30, space, contain symbol
-        # data = {'email': self.test_data['email'], 'username': self.test_data['username'], 'password': self.test_data['password']}
+        # not valid username: too short < 8, too long > 30, space, start with _
 
-        username_poll = []
+        username_poll = ['aa', '_aaaaaaaa', 'abcdefghijklmnopqrstuvwxyzabcdefghijk', 'sdad dsad']
         for username in username_poll:
             data = {'email': self.test_data['email'], 'username': username, 'password': self.test_data['password']}
             response = self.client.post(SIGNUP_URL, data)
             self.assertEqual(response.status_code, 400)
             self.assertEqual(response.data['success'], False)
 
-        # not valid password
-        password_poll = []
-        for password in password_poll:
-            data = {'email': self.test_data['email'], 'username': self.test_data['username'], 'password': password}
-            response = self.client.post(SIGNUP_URL, data)
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.data['success'], False)
-
-        # not valid email
-        email_poll = []
-        for email in email_poll:
-            data = {'email': email, 'username': self.test_data['username'], 'password': self.test_data['password']}
-            response = self.client.post(SIGNUP_URL, data)
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.data['success'], False)
-
-    def test_username_occupied(self):
+        # email occupied
         username = self.test_data['username']
         email = "test_occupied@gmail.com"
         password = self.test_data['password']
@@ -160,8 +143,9 @@ class SignupAPITests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual('username' in response.data['errors'], True)
         self.assertEqual('email' in response.data['errors'], False)
+        self.assertEqual(response.data['errors']['username'][0].__str__(), "This username has been occupied.")
 
-    def test_email_occupied(self):
+        # username occupied
         username = "username_occupied"
         email = self.test_data['email']
         password = self.test_data['password']
@@ -171,6 +155,8 @@ class SignupAPITests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual('email' in response.data['errors'], True)
         self.assertEqual('username' in response.data['errors'], False)
+        self.assertEqual(response.data['errors']['email'][0].__str__(), "This email has been occupied.")
+
 
     def test_signup_succeed(self):
         response = self.client.post(SIGNUP_URL, self.test_data)
@@ -210,6 +196,7 @@ class LoginStatusAPITest(TestCase):
     def test_logged_out_status(self):
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], False)
+
 
 class LogoutAPITest(TestCase):
     
