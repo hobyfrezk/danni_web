@@ -1,5 +1,5 @@
 ### Account Documentation
-User Django pre-defined `auth.user` module to manage all account register login logout action.
+Use Django pre-defined `auth.user` module to manage all account register login logout action.
 We will create another `UserProfile` app to manage user profile data later.
 ---
 
