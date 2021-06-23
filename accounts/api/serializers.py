@@ -39,14 +39,13 @@ class SignupSerializer(serializers.ModelSerializer):
             return False
         if ' ' in username:
             return False
-
         return True
 
     def validate(self, data):
         username = data['username'].lower()
         email = data['email'].lower()
 
-        # TODO: check username validity
+        # check username validity
         if not self.is_valid_username(username):
             raise exceptions.ValidationError({
                 'username': "Username is not valid."

@@ -7,8 +7,8 @@ Data models for Django backend.
 ### Client Related Models
 Models and its property for client related information.
 
-#### Member
-  > This model will be used to reprensent a client in the database.
+#### Account
+  > This model will be used to represent a client in the database.
   > It contains name, balance, membership tier, transaction history of a customer. 
   
   | __`Member`__        | Usage                  | DataType                                  |
@@ -21,9 +21,9 @@ Models and its property for client related information.
   | tier                | Membership tier        | *`ForeignKey`* of __`Tier`__ data type    |
   | created_at          | Membership start time  | *`DateTimeField`*                         |
   | modified_at         | Membership updated time| *`DateTimeField`*                         |
-  | transactions        | Transaction history    | `Queryset` of __`Transaction`__ data type |
-  | appointments_past   | Past appointments      | `Queryset` of __`Appointment`__ data type |
-  | appointments_active | Active appointments    | `Queryset` of __`Appointment`__ data type |
+  | transactions        | Transaction history    | `Queryset` of __`Transaction`__           |
+  | appointments_past   | Past appointments      | `Queryset` of __`Appointment`__           |
+  | appointments_active | Active appointments    | `Queryset` of __`Appointment`__           |
 
 ### Staff side
 Models and its property for staff related information.

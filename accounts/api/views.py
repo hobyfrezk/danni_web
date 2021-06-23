@@ -80,6 +80,7 @@ class AccountViewSet(viewsets.ViewSet):
             "email": user.email,
             "is_superuser": user.is_superuser,
         }
+
         return Response({
             "success": True,
             "user": user_data
