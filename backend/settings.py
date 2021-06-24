@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'accounts',
+    'products',
+    'categories',
 ]
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
