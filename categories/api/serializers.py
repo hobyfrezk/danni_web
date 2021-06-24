@@ -15,9 +15,13 @@ class CategorySerializerForCreate(serializers.ModelSerializer):
 
     def validate(self, data):
         # check if already exist
-        name = data['name']
+        name = data['name'].title()
+
+        if not name:
+            raise exceptions.ValidationError({'message': f'category name cannot be empty.'})
+
         if Category.objects.filter(name=name).exists():
-            raise exceptions.ValidationError({'message': f'category: {name} already exists'})
+            raise exceptions.ValidationError({'message': f'category: {name} already exists.'})
         return data
 
     def create(self, validated_data):
@@ -30,8 +34,17 @@ class CategorySerializerForUpdate(serializers.ModelSerializer):
         model = Category
         fields = ('name', )
 
+    def validate(self, data):
+        # check if already exist
+        name = data['name'].title()
+
+        if not name:
+            raise exceptions.ValidationError({'message': f'category name cannot be empty.'})
+
+        return data
+
     def update(self, instance, validated_data):
-        instance.name = validated_data['name']
+        instance.name = validated_data['name'].title()
         instance.save()
 
         return instance

@@ -33,12 +33,13 @@ class CategoryViewSet(viewsets.GenericViewSet,
         )
 
         return Response({
-            'categories': serializer.data
+            'success': True,
+            'categories': serializer.data,
         })
 
     def create(self, request, *args, **kwargs):
         data = {
-            'name': request.data.get('name').title(),
+            'name': request.data.get('name'),
         }
 
         serializer = CategorySerializerForCreate(data=data)
@@ -53,7 +54,7 @@ class CategoryViewSet(viewsets.GenericViewSet,
         return Response({
             'success': True,
             'data': CategorySerializer(category).data,
-        },status=201)
+        }, status=201)
 
     def update(self, request, *args, **kwargs):
         serializer = CategorySerializerForUpdate(
@@ -70,7 +71,15 @@ class CategoryViewSet(viewsets.GenericViewSet,
         comment = serializer.save()
         return Response({
             'success': True,
-            'category': CategorySerializer(comment).data,
+            'data': CategorySerializer(comment).data,
         }, status=200)
 
     # TODO: retrieve with details
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return Response({
+            "success": True
+        }, status=200)

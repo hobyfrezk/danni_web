@@ -9,17 +9,21 @@ TEST_PASSWORD = 'admin_test_pwd'
 class TestCase(DjangoTestCase):
 
     @staticmethod
-    def create_user(username=None, email=None, password=None):
+    def _create_user(username, email, password, is_admin):
+        if is_admin:
+            return User.objects.create_superuser(username, email, password)
+        else:
+            return User.objects.create_user(username, email, password)
+
+    def create_user(self, username=None, email=None, password=None, is_admin=None):
         if username is None:
             username = TEST_USERNAME
-
         if password is None:
             password = TEST_PASSWORD
-
         if email is None:
             email = TEST_EMAIL
 
-        return User.objects.create_user(username, email, password)
+        return self._create_user(username, email, password, is_admin)
 
     @property
     def anonymous_client(self):
@@ -28,9 +32,8 @@ class TestCase(DjangoTestCase):
         self._anonymous_client = APIClient()
         return self._anonymous_client
 
-
-    def create_and_authenticate_client(self, username, email=None, password=None):
-        user = self.create_user(username, email, password)
+    def create_and_authenticate_client(self, username=None, email=None, password=None, is_admin=False):
+        user = self.create_user(username, email, password, is_admin)
         client = APIClient()
         client.force_authenticate(user)
         return client
