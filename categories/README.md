@@ -11,24 +11,42 @@
     - Permission: `AllowAny`
     - `GET` *<ins> localhost/category/ </ins>*
     
-    
+
 - Retrieve Category with details `GET` and `detail=True`
     - include products belong to this specific category
     - Permission: `AllowAny`
-    - `GET` *<ins> localhost/category/1 </ins>*
+    - `GET` *<ins> localhost/category/{pk}/ </ins>*
     
 
 - Create Category `POST`
     - create new category
-    - Permission: `IsStaff`
+    - Permission: `IsAdminUser`
     - `POST` *<ins> localhost/category/ </ins>*
+    - Returns:
+        - Success 201:
+            - ``{
+                    "success": true,
+                    "data": {
+                        "name": "Pedicure",
+                        "created_at": "2021-06-24T14:30:25.585314Z"
+                    }
+                }``
+        - Error 1: **category existed**, 400.
+            - ``{
+                "message": "Please check input",
+                "errors": {
+                    "message": [
+                        "category: Manicure already exists"
+                    ]
+                }
+            }``
     
 - Update Category `PUT`
     - update existed category
-    - Permission: `IsStaff`
+    - Permission: `IsAdminUser`
     - `PUT` *<ins> localhost/category/ </ins>*
     
 - Delete Category `POST` and `detail=True`
     - soft deletion existed category
-    - Permission: `IsStaff`
-    - `POST` *<ins> localhost/category/delete/1 </ins>*
+    - Permission: `IsAdminUser`
+    - `POST` *<ins> localhost/category/delete/{pk}/ </ins>*

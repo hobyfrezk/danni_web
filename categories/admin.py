@@ -5,4 +5,4 @@ from categories.models import Category
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     # date_hierarchy = 'created_at'
-    pass
+    list_display = ('name', 'created_at')
