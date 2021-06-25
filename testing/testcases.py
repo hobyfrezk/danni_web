@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
 
+from products.models import Product
+
 TEST_USERNAME = 'admin_account'
 TEST_EMAIL = 'admin_test@minenails.com'
 TEST_PASSWORD = 'admin_test_pwd'
@@ -37,3 +39,6 @@ class TestCase(DjangoTestCase):
         client = APIClient()
         client.force_authenticate(user)
         return client
+
+    def create_product(self, name, price, category):
+        return Product.objects.create(name=name, price=price,category_id=category.id)

@@ -1,5 +1,6 @@
 from rest_framework import serializers, exceptions
 from categories.models import Category
+from products.api.serializers import ProductSerializerForCategory
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,3 +49,18 @@ class CategorySerializerForUpdate(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+class CategorySerializerForDetail(serializers.ModelSerializer):
+    products = serializers.SerializerMethodField()
+
+    def get_products(self, obj):
+        return ProductSerializerForCategory(obj.product_set.all(), many=True).data
+
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'name',
+            'products',
+            'created_at'
+        )

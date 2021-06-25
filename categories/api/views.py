@@ -5,6 +5,7 @@ from categories.api.serializers import (
     CategorySerializer,
     CategorySerializerForCreate,
     CategorySerializerForUpdate,
+    CategorySerializerForDetail,
 )
 from categories.models import Category
 
@@ -36,6 +37,15 @@ class CategoryViewSet(viewsets.GenericViewSet,
             'success': True,
             'categories': serializer.data,
         })
+
+    def retrieve(self, request, *args, **kwargs):
+        category = self.get_object()
+
+        return Response({
+            'success': True,
+            'data': CategorySerializerForDetail(category).data
+        })
+
 
     def create(self, request, *args, **kwargs):
         data = {
@@ -74,7 +84,6 @@ class CategoryViewSet(viewsets.GenericViewSet,
             'data': CategorySerializer(comment).data,
         }, status=200)
 
-    # TODO: retrieve with details
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
