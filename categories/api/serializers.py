@@ -1,6 +1,8 @@
 from rest_framework import serializers, exceptions
+
 from categories.models import Category
 from products.api.serializers import ProductSerializerForCategory
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,9 +19,6 @@ class CategorySerializerForCreate(serializers.ModelSerializer):
     def validate(self, data):
         # check if already exist
         name = data['name'].title()
-
-        if not name:
-            raise exceptions.ValidationError({'message': f'category name cannot be empty.'})
 
         if Category.objects.filter(name=name).exists():
             raise exceptions.ValidationError({'message': f'category: {name} already exists.'})

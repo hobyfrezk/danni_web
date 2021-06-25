@@ -17,6 +17,14 @@ class CategoryViewSet(viewsets.GenericViewSet,
                       viewsets.mixins.RetrieveModelMixin,
                       viewsets.mixins.DestroyModelMixin,
                       ):
+    """
+    API endpoint that allows to:
+        - List All Categories
+        - Retrieve a Category for details
+        - Create Category
+        - Update Category
+        - Delete Category
+    """
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

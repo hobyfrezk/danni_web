@@ -10,7 +10,15 @@
 
 
 #### APIs:
-- List Products
+- List All Products `GET`
+    - api/products/
 - List Products under Specific Category
+    - api/products/?category=manicure
 - List Products under Specific Employee #TODO
+- Create Products
+    - Permission
+- Update Products
+    - Permission
+- Delete Products
+    - Permission 
 
