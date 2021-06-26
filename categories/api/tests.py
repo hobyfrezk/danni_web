@@ -1,39 +1,20 @@
-from categories.models import Category
 from testing.testcases import TestCase
 
 
 CATEGORY_URL = '/api/categories/'
 CATEGORY_DETAIL_URL = '/api/categories/{}/'
 
-TEST_USERNAME = 'client_account'
-TEST_EMAIL = 'client_test@minenails.com'
-TEST_PASSWORD = 'client_test_pwd'
-
-TEST_USERNAME_ADMIN = 'admin_account'
-TEST_EMAIL_ADMIN = 'admin_test@minenails.com'
-TEST_PASSWORD_ADMIN = 'admin_test_pwd'
-
 
 
 class CategoryApiTests(TestCase):
     def setUp(self):
-        # self.client = self.anonymous_client
-        self.registered_client = self.create_and_authenticate_client(
-            TEST_USERNAME,
-            TEST_EMAIL,
-            TEST_PASSWORD,
-            is_admin=False
-        )
-        self.admin_client = self.create_and_authenticate_client(
-            TEST_USERNAME_ADMIN,
-            TEST_EMAIL_ADMIN,
-            TEST_PASSWORD_ADMIN,
-            is_admin=True
-        )
-        
-        self.category_1 = Category.objects.create(name='Manicure')
-        self.category_2 = Category.objects.create(name='Pedicure')
-        self.category_3 = Category.objects.create(name='Accessory')
+        # initialize_testing_accounts
+        # self.anonymous_client, self.registered_client, self.admin_client
+        self.initialize_account()
+
+        # initialize_categories
+        # self.category_1, self.category_2, self.category_3
+        self.initialize_categories()
 
 
     def test_list_categories(self):
@@ -117,7 +98,6 @@ class CategoryApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # test title formal string
         self.assertEqual(response.data['data']['name'], data['name'].title())
-
 
 
     def test_delete_category(self):

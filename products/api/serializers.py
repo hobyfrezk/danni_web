@@ -30,11 +30,12 @@ class ProductSerializerForCategory(serializers.ModelSerializer):
 
 
 class ProductSerializerForCreate(serializers.ModelSerializer):
-    category_id = serializers.IntegerField()
+    category_id = serializers.IntegerField(allow_null=True, required=False)
 
     class Meta:
         model = Product
         fields = (
+            'id',
             'name',
             'price',
             'category_id',
@@ -42,9 +43,11 @@ class ProductSerializerForCreate(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        category_id = data['category_id']
-        if not Category.objects.filter(id=category_id).exists():
-            raise exceptions.ValidationError({'message': f'Category {category_id} does not exist.'})
+        category_id = data.get('category_id')
+        if Category.objects.filter(id=category_id).exists():
+            name = data['name']
+            if Product.objects.filter(name=name, category=category_id).exists():
+                raise exceptions.ValidationError({'message': f'Same product already exists.'})
 
         return data
 
@@ -52,7 +55,7 @@ class ProductSerializerForCreate(serializers.ModelSerializer):
         product = Product.objects.create(
             name=validated_data['name'].title(),
             price=validated_data['price'],
-            category_id=validated_data['category_id'],
+            category_id=validated_data.get('category_id'),
         )
 
         return product
