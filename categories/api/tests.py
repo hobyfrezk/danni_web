@@ -1,58 +1,53 @@
-from categories.models import Category
 from testing.testcases import TestCase
-from categories.models import Category
+
 
 CATEGORY_URL = '/api/categories/'
 CATEGORY_DETAIL_URL = '/api/categories/{}/'
-
-TEST_USERNAME = 'client_account'
-TEST_EMAIL = 'client_test@minenails.com'
-TEST_PASSWORD = 'client_test_pwd'
-
-TEST_USERNAME_ADMIN = 'admin_account'
-TEST_EMAIL_ADMIN = 'admin_test@minenails.com'
-TEST_PASSWORD_ADMIN = 'admin_test_pwd'
 
 
 
 class CategoryApiTests(TestCase):
     def setUp(self):
-        # self.client = self.anonymous_client
-        self.registered_client = self.create_and_authenticate_client(
-            TEST_USERNAME,
-            TEST_EMAIL,
-            TEST_PASSWORD,
-            is_admin=False
-        )
-        self.admin_client = self.create_and_authenticate_client(
-            TEST_USERNAME_ADMIN,
-            TEST_EMAIL_ADMIN,
-            TEST_PASSWORD_ADMIN,
-            is_admin=True
-        )
-        
-        self.category_1 = Category.objects.create(name='Manicure')
-        self.category_2 = Category.objects.create(name='Pedicure')
-        self.category_3 = Category.objects.create(name='Accessory')
+        # initialize_testing_accounts
+        # self.anonymous_client, self.registered_client, self.admin_client
+        self.initialize_account()
+
+        # initialize_categories
+        # self.category_1, self.category_2, self.category_3
+        self.initialize_categories()
+
 
     def test_list_categories(self):
         # list with anonymous client -> 200
         # list with logged-in client -> 200
         # list with admin client -> 200
-        # returned categories in -created_at order -> 200
+        # returned categories in created_at order -> 200
         for client in [self.anonymous_client, self.registered_client, self.admin_client]:
             response = client.get(CATEGORY_URL)
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(response.data['categories']), 3)
 
-            self.assertEqual(response.data['categories'][0]['id'], self.category_3.id)
+            self.assertEqual(response.data['categories'][0]['id'], self.category_1.id)
             self.assertEqual(response.data['categories'][1]['id'], self.category_2.id)
-            self.assertEqual(response.data['categories'][2]['id'], self.category_1.id)
+            self.assertEqual(response.data['categories'][2]['id'], self.category_3.id)
 
 
     def test_retrieve_category_with_detail(self):
-        # TODO: wait for implementing products
-        pass
+        category_id = self.category_1.id
+        url = CATEGORY_DETAIL_URL.format(category_id)
+
+        self.create_product(name="Spa Polish Manicure", price=25, category=self.category_1)
+        self.create_product(name="Spa Shellac Manicure", price=35, category=self.category_1)
+
+        # list with anonymous client -> 200
+        # list with logged-in client -> 200
+        # list with admin client -> 200
+        # returned categories in -created_at order -> 200
+        for client in [self.anonymous_client, self.registered_client, self.admin_client]:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data['data']['id'], category_id)
+            self.assertEqual(len(response.data['data']['products']), 2)
 
 
     def test_create_category(self):
@@ -105,7 +100,6 @@ class CategoryApiTests(TestCase):
         self.assertEqual(response.data['data']['name'], data['name'].title())
 
 
-
     def test_delete_category(self):
         category_id = self.category_1.id
         url = CATEGORY_DETAIL_URL.format(category_id)
@@ -124,5 +118,5 @@ class CategoryApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['categories']), 2)
 
-        self.assertEqual(response.data['categories'][0]['id'], self.category_3.id)
-        self.assertEqual(response.data['categories'][1]['id'], self.category_2.id)
+        self.assertEqual(response.data['categories'][0]['id'], self.category_2.id)
+        self.assertEqual(response.data['categories'][1]['id'], self.category_3.id)

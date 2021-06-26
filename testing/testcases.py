@@ -2,9 +2,18 @@ from django.contrib.auth.models import User
 from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
 
-TEST_USERNAME = 'admin_account'
-TEST_EMAIL = 'admin_test@minenails.com'
-TEST_PASSWORD = 'admin_test_pwd'
+from products.models import Product
+from categories.models import Category
+
+TEST_USERNAME = 'client_account'
+TEST_EMAIL = 'client_test@minenails.com'
+TEST_PASSWORD = 'client_test_pwd'
+
+TEST_USERNAME_ADMIN = 'admin_account'
+TEST_EMAIL_ADMIN = 'admin_test@minenails.com'
+TEST_PASSWORD_ADMIN = 'admin_test_pwd'
+
+
 
 class TestCase(DjangoTestCase):
 
@@ -37,3 +46,26 @@ class TestCase(DjangoTestCase):
         client = APIClient()
         client.force_authenticate(user)
         return client
+
+    def create_product(self, name, price, category):
+        return Product.objects.create(name=name, price=price,category_id=category.id)
+
+    def initialize_account(self):
+        # self.anonymous_client
+        self.registered_client = self.create_and_authenticate_client(
+            TEST_USERNAME,
+            TEST_EMAIL,
+            TEST_PASSWORD,
+            is_admin=False
+        )
+        self.admin_client = self.create_and_authenticate_client(
+            TEST_USERNAME_ADMIN,
+            TEST_EMAIL_ADMIN,
+            TEST_PASSWORD_ADMIN,
+            is_admin=True
+        )
+
+    def initialize_categories(self):
+        self.category_1 = Category.objects.create(name='Manicure')
+        self.category_2 = Category.objects.create(name='Pedicure')
+        self.category_3 = Category.objects.create(name='Accessory')
