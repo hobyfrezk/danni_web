@@ -1,6 +1,6 @@
 #### Product API
 
-#### Data models attributes:
+##### Data models attributes:
 - _primary_key_
 - _name_
 - _price_
@@ -9,7 +9,7 @@
 - *employee_set*  #TODO
 
 
-#### APIs:
+##### APIs:
 - List All Products `GET` `'api/products/'`
     - Return all products  
     - Permission: `AllowAny`
@@ -60,6 +60,7 @@
             ]
         }``
         
+        
 - List Products under Specific Category `GET` `'api/products/?category={category_name}'`
     - Return products under a specific category
     - Permission: `AllowAny`
@@ -90,7 +91,11 @@
                     }
                 ]
             }``
+            
+            
 - List Products under Specific Employee #TODO
+
+
 - Create Products `POST` `'/api/products/'`
     - Create a new product by `Request.data`
     - `Request.data = {
@@ -108,6 +113,8 @@
                 "category_id": X,
                 "created_at": "2021-06-26T06:19:04.689476Z"
                 }``
+                
+                
 - Update Products `PUT` `'/api/products/{product_id}/'`
     - Permission `IsAdminUser`
     - `Request.data = {
@@ -122,6 +129,8 @@
     "category_id": category.id/null,
     "created_at": "2021-06-26T06:19:04.689476Z"
 }``
+
+
 - Delete Products `DELETE` `'/api/products/{product_id}/'`
     - Delete an existed product
     - Permission `IsAdminUser`

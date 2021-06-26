@@ -1,18 +1,18 @@
-## Category API
+#### Category API
 
-#### Data models attributes:
+##### Data models attributes:
 - *primary_key*
 - *name*
 - *products_set*  #TODO
 
 ---
-#### APIs:
+##### APIs:
 - List Categories  `GET`  
     - return list of all categories' name
     - Permission: `AllowAny`
     - `GET` *<ins> localhost/category/ </ins>*
     
-
+    
 - Retrieve Category for details `GET` and `detail=True`
     - include products belong to this specific category
     - Permission: `AllowAny`
@@ -44,6 +44,7 @@
                     "detail": "Not found."
                 }``
 
+
 - Create Category `POST`
     - create new category
     - Permission: `IsAdminUser`
@@ -67,6 +68,7 @@
                 }
             }``
     
+    
 - Update Category `PUT`
     - update existed category
     - Permission: `IsAdminUser`
@@ -82,7 +84,10 @@
                     }
                 }``
     
+    
 - Delete Category `POST` and `detail=True`
     - soft deletion existed category
     - Permission: `IsAdminUser`
     - `POST` *<ins> localhost/category/delete/{pk}/ </ins>*
+    
+    
