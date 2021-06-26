@@ -3,7 +3,7 @@
 ##### Data models attributes:
 - *primary_key*
 - *name*
-- *products_set*  #TODO
+- *products_set*
 
 ---
 ##### APIs:
