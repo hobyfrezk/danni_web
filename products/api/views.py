@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
+from utilities import permissions
 from rest_framework.response import Response
 
 from categories.models import Category
@@ -12,12 +13,14 @@ class ProductViewSet(viewsets.GenericViewSet,
                      viewsets.mixins.CreateModelMixin,
                      viewsets.mixins.UpdateModelMixin,
                      viewsets.mixins.DestroyModelMixin,
+                     viewsets.mixins.RetrieveModelMixin,
                      ):
     """
     API endpoint that allows to :
         - List All Products
         - List Products under Specific Category
         - List Products under Specific Employee #TODO
+        - Retrieve a Product
         - Create Products
         - Update Products
         - Delete Product

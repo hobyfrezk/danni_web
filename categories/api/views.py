@@ -1,5 +1,6 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.response import Response
+from utilities import permissions
 
 from categories.api.serializers import (
     CategorySerializer,

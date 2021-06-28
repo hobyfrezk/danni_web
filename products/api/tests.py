@@ -69,6 +69,7 @@ class ProductsApiTest(TestCase):
             "price": "25",
             "category_id": self.category_1.id
         }
+
         response = self.anonymous_client.post(PRODUCT_URL, data)
         self.assertEqual(response.status_code, 403)
 
