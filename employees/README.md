@@ -128,7 +128,7 @@
     - Return ``{'success': True}``
     
     
-- Add A Product to An Employee `POST` `'/api/employees/{employee_id}/add-services/'`
+- Add Products to An Employee `POST` `'/api/employees/{employee_id}/add-services/'`
     - Permission `IsAdmin`
     - `Request.data = {
             'services': [product.id, ...],
@@ -137,7 +137,7 @@
 ``
 
 
-- Delete A product from Employee `POST` `'/api/employees/{employee_id}/remove-services/'`
+- Delete Products from Employee `POST` `'/api/employees/{employee_id}/remove-services/'`
     - Permission `IsAdmin`
     - `Request.data = {'services': [product.id, ...]}`
     - Return ``{'success': True, 'employee': {'id': 11, 'user': OrderedDict([('id', 10), ('username', 'client_account'), ('email', 'client_test@minenails.com'), ('is_staff', True), ('is_superuser', False)]), 'services': [OrderedDict([('id', 7), ('name', 'Spa Polish Manicure'), ('price', '25.00'), ('category', OrderedDict([('id', 10), ('name', 'Manicure'), ('created_at', '2021-07-01T01:30:54.576792Z')])), ('created_at', '2021-07-01T01:30:54.577770Z')]), OrderedDict([('id', 8), ('name', 'Spa Shellac Manicure'), ('price', '35.00'), ('category', OrderedDict([('id', 10), ('name', 'Manicure'), ('created_at', '2021-07-01T01:30:54.576792Z')])), ('created_at', '2021-07-01T01:30:54.578140Z')])], 'nickname': 'ergou', 'created_at': '2021-07-01T01:30:54.586121Z'}}
