@@ -2,6 +2,7 @@ from testing.testcases import TestCase
 
 PRODUCT_URL = '/api/products/'
 PRODUCT_URL_QUERY_CATEGORY = '/api/products/?category={}'
+PRODUCT_URL_QUERY_EMPLOYEE = '/api/products/?employee={}'
 PRODUCT_URL_DETAIL = '/api/products/{}/'
 
 
@@ -29,6 +30,8 @@ class ProductsApiTest(TestCase):
         self.product_2 = self.create_product(
             name="Spa Shellac Manicure", price=35, category=self.category_1
         )
+        
+        self.admin_user.staff.services.add(self.product_1, self.product_2)
 
     def test_list_products(self):
         # list with anonymous client -> 200
@@ -62,6 +65,25 @@ class ProductsApiTest(TestCase):
             self.assertEqual(response.data['products'][0]['id'], self.product_1.id)
             self.assertEqual(response.data['products'][1]['id'], self.product_2.id)
 
+    def test_list_products_under_specific_employee(self):
+        employee_id = self.admin_user.staff.id
+        url = PRODUCT_URL_QUERY_EMPLOYEE.format(employee_id)
+
+        # list with anonymous client -> 200
+        # list with logged-in client -> 200
+        # list with admin client -> 200
+        # returned categories in created_at order -> 200
+
+        for client in [self.anonymous_client, self.registered_client, self.admin_client]:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data['success'], True)
+            self.assertEqual(len(response.data['products']), 2)
+
+            self.assertEqual(response.data['products'][0]['id'], self.product_1.id)
+            self.assertEqual(response.data['products'][1]['id'], self.product_2.id)
+
+
     def test_create_products(self):
         # anonymous client post -> 403
         data = {
@@ -69,6 +91,7 @@ class ProductsApiTest(TestCase):
             "price": "25",
             "category_id": self.category_1.id
         }
+
         response = self.anonymous_client.post(PRODUCT_URL, data)
         self.assertEqual(response.status_code, 403)
 

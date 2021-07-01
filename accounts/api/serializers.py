@@ -7,7 +7,7 @@ from rest_framework import serializers, exceptions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_superuser']
+        fields = ['id', 'username', 'email', 'is_staff', 'is_superuser']
 
 
 class LoginSerializer(serializers.Serializer):
