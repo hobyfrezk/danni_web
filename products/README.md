@@ -6,7 +6,7 @@
 - _price_
 - _category_
 - _created_at_
-- *employee_set*  #TODO
+- *employee_set* 
 
 
 ##### APIs:
@@ -93,7 +93,19 @@
             }``
             
             
-- List Products under Specific Employee #TODO
+- List Products under Specific Employee `GET` `/api/products/?employee={employee_id}`
+
+
+- Retrieve A Product `GET` `'/api/products/{product_id}/'`
+    - Return ``
+                {
+                "id": 1,
+                "name": "Spa Polish Manicure",
+                "price": "25.00",
+                "category_id": 1,
+                "created_at": "2021-06-24T22:24:44.088853Z"
+                }
+            ``
 
 
 - Create Products `POST` `'/api/products/'`

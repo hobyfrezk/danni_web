@@ -1,6 +1,5 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from utilities import permissions
 
 from categories.api.serializers import (
     CategorySerializer,
@@ -9,6 +8,7 @@ from categories.api.serializers import (
     CategorySerializerForDetail,
 )
 from categories.models import Category
+from utilities import permissions
 
 
 class CategoryViewSet(viewsets.GenericViewSet,
