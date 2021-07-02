@@ -98,7 +98,9 @@ class EmployeesApiTest(TestCase):
 
     def test_update_services(self):
         data = {
+            'user': self.registered_user.id,
             'services': [self.product_1.id],
+            'nickname': "ergou"
         }
         # normal create post -> 201
         response = self.admin_client.post(EMPLOYEE_URL, data)
@@ -116,7 +118,6 @@ class EmployeesApiTest(TestCase):
 
         # add one service -> 201
         response = self.admin_client.post(url_add_services, data)
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["success"], True)
         self.assertEqual(len(response.data["employee"]["services"]), 2)

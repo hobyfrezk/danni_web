@@ -17,13 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from accounts.api.views import AccountViewSet, UserViewSet
+from accounts.api.views import AccountViewSet
 from categories.api.views import CategoryViewSet
 from employees.api.views import EmployeeViewSet
 from products.api.views import ProductViewSet
 
 router = routers.DefaultRouter()
-router.register(r'api/users', UserViewSet)
 router.register(r'api/accounts', AccountViewSet, basename='accounts')
 router.register(r'api/categories', CategoryViewSet, basename='categories')
 router.register(r'api/products', ProductViewSet, basename='products')
