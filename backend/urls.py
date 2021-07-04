@@ -21,12 +21,14 @@ from accounts.api.views import AccountViewSet
 from categories.api.views import CategoryViewSet
 from employees.api.views import EmployeeViewSet
 from products.api.views import ProductViewSet
+from customers.api.views import CustomerViewSet
 
 router = routers.DefaultRouter()
 router.register(r'api/accounts', AccountViewSet, basename='accounts')
 router.register(r'api/categories', CategoryViewSet, basename='categories')
 router.register(r'api/products', ProductViewSet, basename='products')
 router.register(r'api/employees', EmployeeViewSet, basename='employees')
+router.register(r'api/customers', CustomerViewSet, basename='customers')
 
 
 urlpatterns = [

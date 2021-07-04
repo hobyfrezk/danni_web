@@ -3,14 +3,14 @@ from django.contrib.auth import (
     login as django_login,
     logout as django_logout,
 )
-from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from accounts.api.serializers import SignupSerializer, LoginSerializer
 from accounts.api.serializers import UserSerializer
+from customers.api.serializers import CustomerSerializerForCreate
 
 
 class AccountViewSet(viewsets.ViewSet):
@@ -24,17 +24,28 @@ class AccountViewSet(viewsets.ViewSet):
     @action(methods=['POST'], detail=False)
     def signup(self, request):
         """
-        Signup with username, email, password
+        Signup with username, email, password (optional: first name, last name, gender, phone)
         """
-        serializer = SignupSerializer(data=request.data)
-        if not serializer.is_valid():
+        serializer_signup = SignupSerializer(data=request.data)
+        serializer_customer = CustomerSerializerForCreate(data=request.data, context={'request': request})
+
+        if not serializer_signup.is_valid():
             return Response({
                 'success': False,
                 'message': "Please check input",
-                'errors': serializer.errors,
+                'errors': serializer_signup.errors,
             }, status=400)
 
-        user = serializer.save()
+        if not serializer_customer.is_valid():
+            return Response({
+                'success': False,
+                'message': "Please check input",
+                'errors': serializer_customer.errors,
+            }, status=400)
+
+        user = serializer_signup.save()
+        serializer_customer.save()
+
         django_login(request, user)
 
         return Response({

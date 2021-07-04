@@ -170,6 +170,30 @@ class AccountTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['has_logged_in'], True)
 
+    def test_signup_with_customer_profile(self):
+        # TODO signup with customer data
+        # signup with profile data
+        data = {
+            'email': "with_profile@minenails.com",
+            'username': "new_account_profile",
+            'password': "newpassword",
+            'first_name': "ERGOU",
+            'last_name': "WANG",
+            'phone': +14161234567,
+
+        }
+        response = self.client.post(SIGNUP_URL, data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['user']['username'], data['username'])
+        self.assertEqual(response.data['user']['email'], data['email'])
+
+        # default state -> logged in
+        response = self.client.get(LOGIN_STATUS_URL)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['has_logged_in'], True)
+
+
+
     def test_logged_in_status(self):
         data = {
             'username': TEST_USERNAME,

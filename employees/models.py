@@ -13,6 +13,9 @@ class Employee(models.Model):
 
     class Meta:
         ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['user']),
+        ]
 
     def __str__(self):
         return 'staff: {}'.format(self.nickname)
