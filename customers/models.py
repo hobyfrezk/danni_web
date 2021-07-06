@@ -14,13 +14,13 @@ class Customer(models.Model):
         TIER_2 = (2, "Tier 2")
         TIER_3 = (3, "Tier 3")
 
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-    first_name = models.CharField(max_length=16, null=True)
-    last_name = models.CharField(max_length=16, null=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    first_name = models.CharField(max_length=16, null=True, blank=True)
+    last_name = models.CharField(max_length=16, null=True, blank=True)
     gender = models.IntegerField(choices=Gender.choices, default=0)
     tier = models.IntegerField(choices=Tier.choices, default=0)
 
-    phone = models.CharField(max_length=14, null=True)
+    phone = models.CharField(max_length=14, null=True, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -37,7 +37,7 @@ class Customer(models.Model):
 
     def __str__(self):
         user_name = getattr(self.user, "username", "Null_user")
-        return f"Customer: {self.first_name} {self.last_name}. Username: {user_name}"
+        return f"Username {user_name}"
 
 def _create_customer_profile(user):
     profile, _ = Customer.objects.get_or_create(user=user)
