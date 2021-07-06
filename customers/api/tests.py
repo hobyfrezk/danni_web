@@ -8,6 +8,7 @@ CUSTOMER_URL = '/api/customers/'
 DETAIL_URL = '/api/customers/{}/'
 UPDATE_PROFILE_URL = '/api/customers/{}/update-info/'
 UPDATE_BALANCE_URL = '/api/customers/{}/update-balance/'
+UPDATE_CUSTOMER_TIER_URL = '/api/customers/{}/update-tier/'
 
 default_data_dict = {
     'username': 'customer_1',
@@ -146,6 +147,7 @@ class CustomerApiTests(TestCase):
         self._check_success_update(client, data, url, user_id)
 
         # update gender -> 200 TODO
+        # wrong gender option -> 400 TODO
         # update wrong phone -> 403 TODO
 
         # update correct phone -> 200
@@ -212,3 +214,43 @@ class CustomerApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         after_balance = float(response.data['customer']["balance"])
         self.assertEqual(after_balance - prev_balance, -50)
+
+    def test_update_customer_tier(self):
+        # permission check
+        data = default_data_dict
+        client = APIClient()
+        response = client.post(SIGNUP_URL, data)
+        profile_id = response.data["user"]["profile"]["id"]
+
+        tier = response.data["user"]["profile"]["tier"]
+        url = UPDATE_CUSTOMER_TIER_URL.format(profile_id)
+
+        data = {"tier": 1}
+
+        # anonymous user post -> 403
+        response = self.anonymous_client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+
+        # other registered user post -> 403
+        response = self.registered_client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+
+        # owner user post -> 403
+        response = client.post(url, data)
+        self.assertEqual(response.status_code, 403)
+
+        # staff post recharge -> 200
+        response = self.staff_client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['customer']['tier'], 1)
+
+        # admin post recharge -> 200
+        data = {"tier": 2}
+        response = self.staff_client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['customer']['tier'], 2)
+
+        # wrong tier value
+        data = {"tier": 5}
+        response = self.staff_client.post(url, data)
+        self.assertEqual(response.status_code, 400)

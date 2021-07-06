@@ -15,6 +15,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             'gender',
             'phone',
             'balance',
+            'tier',
             'created_at',
             'updated_at'
         )
@@ -77,6 +78,19 @@ class CustomerSerializerForUpdateBalance(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         instance.balance += validated_data['balance']
+
+        instance.save()
+        return instance
+
+
+class CustomerSerializerForUpdateTier(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ('tier', )
+
+    def update(self, instance, validated_data):
+
+        instance.tier = validated_data['tier']
 
         instance.save()
         return instance
