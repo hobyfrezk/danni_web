@@ -7,16 +7,16 @@
 
 ---
 ##### APIs:
-- List Categories  `GET`  
+- *<ins> localhost/category/ </ins>*
+    - `GET` method  
     - return list of all categories' name
     - Permission: `AllowAny`
-    - `GET` *<ins> localhost/category/ </ins>*
+  
     
-    
-- Retrieve Category for details `GET` and `detail=True`
-    - include products belong to this specific category
+- *<ins> localhost/category/{pk}/ </ins>*
+    - `GET` method
+    - Retrieve Category for details
     - Permission: `AllowAny`
-    - `GET` *<ins> localhost/category/{pk}/ </ins>*
     - Returns
         - Success 200 
             - ``{
@@ -45,10 +45,10 @@
                 }``
 
 
-- Create Category `POST`
-    - create new category
+-  *<ins> localhost/category/ </ins>*
+    -  `POST` method
+    - Create new category
     - Permission: `IsAdminUser`
-    - `POST` *<ins> localhost/category/ </ins>*
     - Returns:
         - Success 201:
             - ``{
@@ -69,10 +69,10 @@
             }``
     
     
-- Update Category `PUT`
-    - update existed category
+-  *<ins> localhost/category/ </ins>*
+    - `PUT` method
+    - Update existed category
     - Permission: `IsAdminUser`
-    - `PUT` *<ins> localhost/category/ </ins>*
     - Returns:
         - Success 200:
             - ``{
@@ -85,9 +85,9 @@
                 }``
     
     
-- Delete Category `POST` and `detail=True`
-    - soft deletion existed category
+- *<ins> localhost/category/delete/{pk}/ </ins>*
+    - `POST` method
+    - Delete existed category #TODO soft deletion
     - Permission: `IsAdminUser`
-    - `POST` *<ins> localhost/category/delete/{pk}/ </ins>*
     
     

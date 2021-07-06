@@ -35,7 +35,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            return [permissions.AllowAny(), ]
+            return [permissions.AllowAny()]
 
         return [permissions.IsAdminUser()]
 

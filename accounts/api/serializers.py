@@ -2,12 +2,23 @@ from abc import ABC
 
 from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions
-
+from customers.api.serializers import CustomerSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_staff', 'is_superuser']
+
+
+class UserSerializerWithProfileDetail(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+
+    def get_profile(self, obj):
+        return CustomerSerializer(obj.customer).data
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_staff', 'is_superuser', 'profile']
 
 
 class LoginSerializer(serializers.Serializer):
@@ -27,6 +38,7 @@ class SignupSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=6)
     password = serializers.CharField(max_length=20, min_length=6)
     email = serializers.EmailField()
+
 
     class Meta:
         model = User
