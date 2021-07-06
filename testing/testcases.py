@@ -42,8 +42,6 @@ class TestCase(DjangoTestCase):
 
     @property
     def anonymous_client(self):
-        if hasattr(self, '_anonymous_client'):
-            return self._anonymous_client
         self._anonymous_client = APIClient()
         return self._anonymous_client
 
@@ -64,14 +62,16 @@ class TestCase(DjangoTestCase):
 
     def initialize_account(self):
         # self.anonymous_client
-        if hasattr(self, '_anonymous_client'):
-            return self._anonymous_client
+        # self.registered_user, self.registered_client
+        # self.staff_user, self.staff_client
+        # self.admin_user, self.admin_client
 
         self.registered_user, self.registered_client = self.create_and_authenticate_client(
             TEST_USERNAME,
             TEST_EMAIL,
             TEST_PASSWORD,
-            is_admin=False
+            is_admin=False,
+            is_staff=False
         )
 
         self.staff_user, self.staff_client = self.create_and_authenticate_client(

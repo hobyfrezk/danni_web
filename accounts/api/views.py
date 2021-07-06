@@ -9,11 +9,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from accounts.api.serializers import SignupSerializer, LoginSerializer
-from accounts.api.serializers import UserSerializer
+from accounts.api.serializers import UserSerializer, UserSerializerWithProfileDetail
 from customers.api.serializers import CustomerSerializerForCreate
 
 
-class AccountViewSet(viewsets.ViewSet):
+class AccountViewSet(viewsets.GenericViewSet):
     """
     API endpoints that allows: signup, login, login status, logout
     """
@@ -50,7 +50,7 @@ class AccountViewSet(viewsets.ViewSet):
 
         return Response({
             'success': True,
-            'user': UserSerializer(user).data,
+            'user': UserSerializerWithProfileDetail(user).data,
         }, status=201)
 
     @action(methods=['POST'], detail=False)
@@ -75,16 +75,10 @@ class AccountViewSet(viewsets.ViewSet):
             }, status=400)
 
         django_login(request, user)
-        user_data = {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "is_superuser": user.is_superuser,
-        }
 
         return Response({
             "success": True,
-            "user": user_data
+            "user": UserSerializerWithProfileDetail(user).data,
         })
 
     @action(methods=['GET'], detail=False)
@@ -92,7 +86,7 @@ class AccountViewSet(viewsets.ViewSet):
         # check login status
         data = {'has_logged_in': request.user.is_authenticated}
         if request.user.is_authenticated:
-            data['user'] = UserSerializer(request.user).data
+            data['user'] = UserSerializerWithProfileDetail(request.user).data
 
         return Response(data)
 

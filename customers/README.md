@@ -11,9 +11,32 @@
 - _updated_at_
 
 ##### APIs
-- List all customers
-- Retrieve a customer
-- Update info (first_name, last_name, gender, phone)
-- Update balance
+-  *<ins> /api/accounts/signup/ </ins>*
+    - `POST` Method 
+    - Create new account and new customer profile
+    - Permission: `AllowAny`
+    
+    
+-  *<ins> /api/customers/ </ins>*
+    - `GET` Method
+    - List all customers
+    - Permission: `IsStaff`
+    
+- *<ins>/api/customers/{customer_id}/</ins>*
+    - `GET` Method
+    - Retrieve a customer
+    - Permission: `IsObjectOwnerOrIsStaff`
+
+
+- *<ins>/api/customers/{customer_id}/update-info/</ins>*
+    - `POST` Method
+    - Update info (first_name, last_name, gender, phone)
+    - Permission: `IsObjectOwnerOrIsStaff`
+    
+- *<ins>/api/customers/{customer_id}/update-balance/</ins>*
+    - `POST` Method
+    - Update balance
+    - Permission: `IsStaff`
+    
 - List appointments #TODO
 - List checkouts #TODO

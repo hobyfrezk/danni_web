@@ -36,7 +36,7 @@ class CustomerSerializerForCreate(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        user = User.objects.filter(email=self.context['request'].data['username'].lower()).first()
+        user = User.objects.filter(username=self.context['request'].data['username'].lower()).first()
         first_name = validated_data.get('first_name', '').lower()
         last_name = validated_data.get('last_name', '').lower()
         gender = validated_data.get('gender', 0)

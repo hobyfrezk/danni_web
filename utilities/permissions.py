@@ -20,16 +20,15 @@ class IsStaff(BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
+
         return (request.user.is_staff == True) or (request.user.is_superuser == True)
 
 
 class AllowAny(BasePermission):
     pass
 
-
 class IsObjectOwnerOrIsStaff(BasePermission):
     message = PERMISSION_MSG
-
     def has_permission(self, request, view):
         return True
 

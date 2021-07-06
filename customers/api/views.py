@@ -19,7 +19,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
     """
     API endpoint that allows to:
         - List all customers
-        - Retrieve a customer
+        - Retrieve a customer #TODO
         - Update info (first_name, last_name, gender, phone)
         - Update balance
         - List appointments #TODO
@@ -32,7 +32,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
         if self.action in ['retrieve', 'update_info', 'list_appointments', 'list_checkouts']:
             return [permissions.IsAuthenticated(), permissions.IsObjectOwnerOrIsStaff()]
 
-        if self.action in ['update_balance']:
+        if self.action in ['update_balance', 'list']:
             return [permissions.IsStaff()]
 
         return [permissions.IsAdminUser()]
@@ -49,9 +49,17 @@ class CustomerViewSet(viewsets.GenericViewSet,
             'customers': serializer.data,
         }, status=200)
 
+    def retrieve(self, request, *args, **kwargs):
+        customer = self.get_object()
+
+        return Response({
+            'success': True,
+            'customer': CustomerSerializer(customer).data,
+        }, status=200)
+
     @action(methods=["POST"], detail=True, url_path="update-info")
-    def update_info(self, request, pk):
-        customer = get_object_or_404(Customer, pk=pk)
+    def update_info(self, request, *args, **kwargs):
+        customer = self.get_object()
 
         serializer = CustomerSerializerForUpdateInfo(
             instance=customer,
@@ -72,9 +80,9 @@ class CustomerViewSet(viewsets.GenericViewSet,
         }, status=200)
 
     @action(methods=["POST"], detail=True, url_path="update-balance")
-    def update_balance(self, request, pk):
+    def update_balance(self, request, *args, **kwargs):
         # TODO fanout to checkout table
-        customer = get_object_or_404(Customer, pk=pk)
+        customer = self.get_object()
 
         serializer = CustomerSerializerForUpdateBalance(
             instance=customer,
