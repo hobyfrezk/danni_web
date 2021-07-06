@@ -8,10 +8,18 @@ class Customer(models.Model):
         MALE = (1, "Male")
         FEMALE = (2, "Female")
 
+    class Tier(models.IntegerChoices):
+        NORMAL_USER = (0, "Normal User")
+        TIER_1 = (1, "Tier 1")
+        TIER_2 = (2, "Tier 2")
+        TIER_3 = (3, "Tier 3")
+
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=16, null=True)
     last_name = models.CharField(max_length=16, null=True)
     gender = models.IntegerField(choices=Gender.choices, default=0)
+    tier = models.IntegerField(choices=Tier.choices, default=0)
+
     phone = models.CharField(max_length=14, null=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
@@ -24,6 +32,7 @@ class Customer(models.Model):
             models.Index(fields=['user']),
             models.Index(fields=['balance']),
             models.Index(fields=['gender', 'created_at']),
+            models.Index(fields=['tier'])
         ]
 
     def __str__(self):

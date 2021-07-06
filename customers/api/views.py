@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -6,7 +5,8 @@ from rest_framework.response import Response
 from customers.api.serializers import (
     CustomerSerializer,
     CustomerSerializerForUpdateInfo,
-    CustomerSerializerForUpdateBalance
+    CustomerSerializerForUpdateBalance,
+    CustomerSerializerForUpdateTier
 )
 from customers.models import Customer
 from utilities import permissions
@@ -22,6 +22,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
         - Retrieve a customer #TODO
         - Update info (first_name, last_name, gender, phone)
         - Update balance
+        - Update tier
         - List appointments #TODO
         - List checkouts #TODO
     """
@@ -32,7 +33,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
         if self.action in ['retrieve', 'update_info', 'list_appointments', 'list_checkouts']:
             return [permissions.IsAuthenticated(), permissions.IsObjectOwnerOrIsStaff()]
 
-        if self.action in ['update_balance', 'list']:
+        if self.action in ['list', 'update_balance', 'update_tier']:
             return [permissions.IsStaff()]
 
         return [permissions.IsAdminUser()]
@@ -85,6 +86,28 @@ class CustomerViewSet(viewsets.GenericViewSet,
         customer = self.get_object()
 
         serializer = CustomerSerializerForUpdateBalance(
+            instance=customer,
+            data=request.data
+        )
+
+        if not serializer.is_valid():
+            return Response({
+                'message': 'Please check input',
+                'error': serializer.errors,
+            }, status=400)
+
+        customer = serializer.save()
+
+        return Response({
+            'success': 'True',
+            'customer': CustomerSerializer(customer).data
+        }, status=200)
+
+    @action(methods=["POST"], detail=True, url_path="update-tier")
+    def update_tier(self, request, *args, **kwargs):
+        customer = self.get_object()
+
+        serializer = CustomerSerializerForUpdateTier(
             instance=customer,
             data=request.data
         )
