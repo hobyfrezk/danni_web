@@ -33,10 +33,17 @@
     - Update info (first_name, last_name, gender, phone)
     - Permission: `IsObjectOwnerOrIsStaff`
     
+    
 - *<ins>/api/customers/{customer_id}/update-balance/</ins>*
     - `POST` Method
     - Update balance
     - Permission: `IsStaff`
-    
-- List appointments #TODO
+
+
+- *<ins>/api/customers/{customer_id}/appointments/</ins>* 
+    - `POST` Method
+    - List appointments for a customer
+    - Permission: `IsObjectOwnerOrIsStaff`
+   
+   
 - List checkouts #TODO

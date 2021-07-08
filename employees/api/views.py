@@ -1,8 +1,9 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from appointments.api.serializers import AppointmentSerializer
+from appointments.models import Appointment
 from employees.api.serializers import (
     EmployeeSerializer,
     EmployeeSerializerForCreate,
@@ -10,7 +11,7 @@ from employees.api.serializers import (
     EmployeeSerializerForRemoveServices,
 )
 from employees.models import Employee
-from utilities import permissions
+from utilities import permissions, helpers
 
 
 class EmployeeViewSet(viewsets.GenericViewSet,
@@ -28,6 +29,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         - Update Service for An Employee
             - Add new service(s)
             - Delete service(s)
+        - List Appointments for An Employee
     """
 
     queryset = Employee.objects.all()
@@ -37,15 +39,10 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
 
-        return [permissions.IsAdminUser()]
+        if self.action == "appointments":
+            return [permissions.IsStaff()]
 
-    @staticmethod
-    def serializer_error_response(serializer):
-        return Response({
-            'success': False,
-            'message': 'Please check input',
-            'errors': serializer.errors,
-        }, status=400)
+        return [permissions.IsAdminUser()]
 
     def list(self, request, *args, **kwargs):
         employees = Employee.objects.all().prefetch_related("user"). \
@@ -66,7 +63,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         )
 
         if not serializer.is_valid():
-            return self.serializer_error_response(serializer)
+            return helpers.serializer_error_response(serializer)
 
         employee = serializer.save()
 
@@ -92,15 +89,15 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         }, status=200)
 
     @action(methods=['POST'], detail=True, url_path='add-services')
-    def add_services(self, request, pk):
-        employee = get_object_or_404(Employee, pk=pk)
+    def add_services(self, request, *args, **kwargs):
+        employee = self.get_object()
 
         serializer = EmployeeSerializerForAddServices(
             employee, data=request.data
         )
 
         if not serializer.is_valid():
-            return self.serializer_error_response(serializer)
+            return helpers.serializer_error_response(serializer)
 
         employee = serializer.save()
 
@@ -110,15 +107,15 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         }, status=201)
 
     @action(methods=['POST'], detail=True, url_path='remove-services')
-    def remove_services(self, request, pk):
-        employee = get_object_or_404(Employee, pk=pk)
+    def remove_services(self, request, *args, **kwargs):
+        employee = self.get_object()
 
         serializer = EmployeeSerializerForRemoveServices(
             employee, data=request.data
         )
 
         if not serializer.is_valid():
-            return self.serializer_error_response(serializer)
+            return helpers.serializer_error_response(serializer)
 
         employee = serializer.save()
 
@@ -126,3 +123,15 @@ class EmployeeViewSet(viewsets.GenericViewSet,
             'success': True,
             'employee': EmployeeSerializer(employee).data,
         }, status=201)
+
+    @action(methods=["GET"], detail=True)
+    def appointments(self, request, *args, **kwargs):
+        employee = self.get_object()
+        appointments = Appointment.objects.filter(staff=employee)
+
+        serializer = AppointmentSerializer(appointments, many=True)
+
+        return Response({
+            'success': 'True',
+            'appointments': serializer.data
+        }, status=200)

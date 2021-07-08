@@ -9,6 +9,7 @@ DETAIL_URL = '/api/customers/{}/'
 UPDATE_PROFILE_URL = '/api/customers/{}/update-info/'
 UPDATE_BALANCE_URL = '/api/customers/{}/update-balance/'
 UPDATE_CUSTOMER_TIER_URL = '/api/customers/{}/update-tier/'
+APPOINTMENTS_URL = '/api/customers/{}/appointments/'
 
 default_data_dict = {
     'username': 'customer_1',
@@ -20,7 +21,25 @@ default_data_dict = {
 class CustomerApiTests(TestCase):
 
     def setUp(self):
+        """
+        initialize_testing_accounts()
+            - self.anonymous_client,
+            - self.registered_client,
+            - self.registered_client2,
+            - self.admin_client,
+
+        initialize_categories() & self.initialize_products()
+            - self.category_1,
+                - self.product_1
+                - self.product_2
+            - self.category_2,
+            - self.category_3,
+        """
+
         self.initialize_account()
+        self.initialize_categories()
+        self.initialize_products()
+        self.initialize_appointments()
 
     def _check_success_signup(self, data):
         count_before = Customer.objects.count()
@@ -222,7 +241,6 @@ class CustomerApiTests(TestCase):
         response = client.post(SIGNUP_URL, data)
         profile_id = response.data["user"]["profile"]["id"]
 
-        tier = response.data["user"]["profile"]["tier"]
         url = UPDATE_CUSTOMER_TIER_URL.format(profile_id)
 
         data = {"tier": 1}
@@ -254,3 +272,22 @@ class CustomerApiTests(TestCase):
         data = {"tier": 5}
         response = self.staff_client.post(url, data)
         self.assertEqual(response.status_code, 400)
+
+    def test_list_appointments(self):
+        url = APPOINTMENTS_URL.format(self.registered_user.customer.id)
+
+        response = self.anonymous_client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.registered_client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["appointments"]), 3)
+
+        response = self.registered_client2.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.staff_client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.admin_client.get(url)
+        self.assertEqual(response.status_code, 200)

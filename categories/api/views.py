@@ -8,7 +8,7 @@ from categories.api.serializers import (
     CategorySerializerForDetail,
 )
 from categories.models import Category
-from utilities import permissions
+from utilities import permissions, helpers
 
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -64,10 +64,7 @@ class CategoryViewSet(viewsets.GenericViewSet,
         serializer = CategorySerializerForCreate(data=data)
 
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'errors': serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         category = serializer.save()
         return Response({
@@ -82,10 +79,7 @@ class CategoryViewSet(viewsets.GenericViewSet,
         )
 
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'error': serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         comment = serializer.save()
         return Response({
