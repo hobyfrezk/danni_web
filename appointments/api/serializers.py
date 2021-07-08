@@ -24,7 +24,7 @@ class AppointmentSerializerForCreate(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        user = self.context['request'].user
+        user = validated_data["user"]
         appointment_time = validated_data["appointment_time"]
         duration = validated_data["duration"]
         services = validated_data["services"]

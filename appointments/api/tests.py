@@ -99,7 +99,6 @@ class AppointmentsTest(TestCase):
 
     def test_client_create(self):
         data = {
-            "user": self.registered_user.id,
             "appointment_time": (datetime.now(pytz.utc) + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S"),
             "duration": "60",
             "services": [self.product_1.id, self.product_2.id],
@@ -110,19 +109,13 @@ class AppointmentsTest(TestCase):
         self.assertEqual(response.status_code, 403)
 
         response = self.registered_client.post(APPOINTMENTS_URL, data)
+        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
         self.assertEqual(response.data["appointment"]["services"], [self.product_1.id, self.product_2.id])
         self.assertEqual(response.data["appointment"]["staff"], self.staff_user.staff.id)
 
-        # fake user_id to overbook
-        data = {
-            "user": self.admin_user.id,
-            "appointment_time": (datetime.now(pytz.utc) + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S"),
-            "duration": "60",
-            "services": [self.product_1.id, self.product_2.id],
-            "staff": self.staff_user.staff.id,
-        }
+        # overbook
         response = self.registered_client.post(APPOINTMENTS_URL, data)
         self.assertEqual(response.status_code, 400)
 

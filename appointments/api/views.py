@@ -51,8 +51,17 @@ class AppointmentViewSet(viewsets.GenericViewSet,
         }, status=200)
 
     def create(self, request, *args, **kwargs):
+        
+        data = dict()
+        for key in request.data:
+            temp = request.data.getlist(key)
+            data[key] = temp if len(temp) > 1 else temp[0]
+
+        # add user_id in data for for AppointmentSerializerForCreate validation.
+        data["user"] = request.user.id
+
         serializer = AppointmentSerializerForCreate(
-            data=request.data, context={"request": request}
+            data=data
         )
 
         if not serializer.is_valid():
