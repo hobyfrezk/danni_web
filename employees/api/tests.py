@@ -5,6 +5,7 @@ EMPLOYEE_URL = '/api/employees/'
 EMPLOYEE_URL_DETAIL = '/api/employees/{}/'
 EMPLOYEE_URL_ADD_SERVICES = '/api/employees/{}/add-services/'
 EMPLOYEE_URL_REMOVE_SERVICES = '/api/employees/{}/remove-services/'
+EMPLOYEE_APPOINTMENT_URL = '/api/employees/{}/appointments/'
 
 class EmployeesApiTest(TestCase):
     def setUp(self):
@@ -26,6 +27,7 @@ class EmployeesApiTest(TestCase):
         self.initialize_account()
         self.initialize_categories()
         self.initialize_products()
+        self.initialize_appointments()
 
         self.admin_user.staff.services.add(self.product_1.id, self.product_2.id)
         self.staff_user.staff.services.add(self.product_1.id)
@@ -41,8 +43,8 @@ class EmployeesApiTest(TestCase):
             self.assertEqual(response.data['success'], True)
             self.assertEqual(len(response.data['employees']), 2)
 
-            self.assertEqual(response.data['employees'][0]['id'], self.admin_user.staff.id)
-            self.assertEqual(response.data['employees'][1]['id'], self.staff_user.staff.id)
+            self.assertEqual(response.data['employees'][0]['id'], self.staff_user.staff.id)
+            self.assertEqual(response.data['employees'][1]['id'], self.admin_user.staff.id)
 
     def test_create_employee(self):
         # set self.registered_client as staff client
@@ -170,3 +172,23 @@ class EmployeesApiTest(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["success"], True)
         self.assertEqual(len(response.data["employee"]["services"]), 0)
+
+    def test_list_appointments(self):
+        url = EMPLOYEE_APPOINTMENT_URL.format(self.staff_user.staff.id)
+
+        response = self.anonymous_client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.registered_client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.registered_client2.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.staff_client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["appointments"]), 3)
+
+        response = self.admin_client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["appointments"]), 3)

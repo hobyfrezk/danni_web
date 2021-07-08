@@ -17,7 +17,7 @@ class IsStaff(BasePermission):
     message = PERMISSION_MSG
 
     def has_permission(self, request, view):
-        return True
+        return request.user.is_staff == True
 
     def has_object_permission(self, request, view, obj):
 

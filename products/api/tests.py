@@ -13,23 +13,20 @@ class ProductsApiTest(TestCase):
         initialize_testing_accounts
             - self.anonymous_client,
             - self.registered_client,
+            - self.registered_client2,
             - self.admin_client,
 
-        initialize_categories
+        initialize_categories, self.initialize_products
             - self.category_1,
+                - self.product_1
+                - self.product_2
             - self.category_2,
             - self.category_3,
         """
 
         self.initialize_account()
         self.initialize_categories()
-
-        self.product_1 = self.create_product(
-            name="Spa Polish Manicure", price=25, category=self.category_1
-        )
-        self.product_2 = self.create_product(
-            name="Spa Shellac Manicure", price=35, category=self.category_1
-        )
+        self.initialize_products()
         
         self.admin_user.staff.services.add(self.product_1, self.product_2)
 

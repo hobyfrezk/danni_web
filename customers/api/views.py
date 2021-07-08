@@ -2,6 +2,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from appointments.api.serializers import AppointmentSerializer
+from appointments.models import Appointment
 from customers.api.serializers import (
     CustomerSerializer,
     CustomerSerializerForUpdateInfo,
@@ -9,7 +11,7 @@ from customers.api.serializers import (
     CustomerSerializerForUpdateTier
 )
 from customers.models import Customer
-from utilities import permissions
+from utilities import permissions, helpers
 
 
 class CustomerViewSet(viewsets.GenericViewSet,
@@ -23,14 +25,14 @@ class CustomerViewSet(viewsets.GenericViewSet,
         - Update info (first_name, last_name, gender, phone)
         - Update balance
         - Update tier
-        - List appointments #TODO
+        - List appointments
         - List checkouts #TODO
     """
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
     def get_permissions(self):
-        if self.action in ['retrieve', 'update_info', 'list_appointments', 'list_checkouts']:
+        if self.action in ['retrieve', 'update_info', 'list_appointments', 'list_checkouts', 'appointments']:
             return [permissions.IsAuthenticated(), permissions.IsObjectOwnerOrIsStaff()]
 
         if self.action in ['list', 'update_balance', 'update_tier']:
@@ -68,10 +70,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
         )
 
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'error': serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         customer = serializer.save()
 
@@ -91,10 +90,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
         )
 
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'error': serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         customer = serializer.save()
 
@@ -113,14 +109,23 @@ class CustomerViewSet(viewsets.GenericViewSet,
         )
 
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'error': serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         customer = serializer.save()
 
         return Response({
             'success': 'True',
             'customer': CustomerSerializer(customer).data
+        }, status=200)
+
+    @action(methods=["GET"], detail=True)
+    def appointments(self, request, *args, **kwargs):
+        customer = self.get_object()
+        appointments = Appointment.objects.filter(user_id=customer.user_id)
+
+        serializer = AppointmentSerializer(appointments, many=True)
+
+        return Response({
+            'success': 'True',
+            'appointments': serializer.data
         }, status=200)

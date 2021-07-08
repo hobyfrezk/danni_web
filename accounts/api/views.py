@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from accounts.api.serializers import SignupSerializer, LoginSerializer
 from accounts.api.serializers import UserSerializer, UserSerializerWithProfileDetail
 from customers.api.serializers import CustomerSerializerForCreate
-
+from utilities import helpers
 
 class AccountViewSet(viewsets.GenericViewSet):
     """
@@ -30,18 +30,10 @@ class AccountViewSet(viewsets.GenericViewSet):
         serializer_customer = CustomerSerializerForCreate(data=request.data, context={'request': request})
 
         if not serializer_signup.is_valid():
-            return Response({
-                'success': False,
-                'message': "Please check input",
-                'errors': serializer_signup.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer_signup)
 
         if not serializer_customer.is_valid():
-            return Response({
-                'success': False,
-                'message': "Please check input",
-                'errors': serializer_customer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer_customer)
 
         user = serializer_signup.save()
         serializer_customer.save()
@@ -58,11 +50,7 @@ class AccountViewSet(viewsets.GenericViewSet):
         serializer = LoginSerializer(data=request.data)
 
         if not serializer.is_valid():
-            return Response({
-                "success": False,
-                "message": "Please check input.",
-                "errors": serializer.errors,
-            }, status=400)
+            return helpers.serializer_error_response(serializer)
 
         username = serializer.validated_data['username'].lower()
         password = serializer.validated_data['password']
