@@ -18,7 +18,7 @@ class Employee(models.Model):
         ]
 
     def __str__(self):
-        return 'staff: {}'.format(self.nickname)
+        return 'staff: {}'.format(self.nickname or self.id)
 
 
 def get_staff_data(user):

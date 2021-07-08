@@ -31,6 +31,11 @@ class Appointment(models.Model):
             models.Index(fields=['staff']),
         )
 
+        unique_together = (
+            ('appointment_time', 'staff'),
+            ('appointment_time', 'user'),
+        )
+
         ordering = ('created_at',)
 
     @property
@@ -48,3 +53,6 @@ class Appointment(models.Model):
     def end_time(self):
         time_change = timedelta(minutes=self.duration)
         return self.appointment_time + time_change
+
+    def __str__(self):
+        return f"{self.user} at {self.appointment_time} with {self.staff}"

@@ -15,7 +15,12 @@ class AppointmentSerializerForCreate(serializers.ModelSerializer):
         fields = ('user', 'appointment_time', 'duration', 'services', 'staff')
 
     def validate(self, data):
-        # TODO validate duration must longer than selected products
+        # TODO validate：
+        #  - duration must longer than selected products
+        #  - staff is free during selected duration,
+        #  - but those considerations can be released when staff want to create appointments.
+        #    in `AppointmentSerializerForStaffCreate`
+
         return data
 
     def create(self, validated_data):
@@ -52,6 +57,7 @@ class AppointmentSerializerForStaffCreate(serializers.ModelSerializer):
         fields = ('user', 'appointment_time', 'duration', 'services', 'staff')
 
     def create(self, validated_data):
+
         user = validated_data["user"]
         appointment_time = validated_data["appointment_time"]
         duration = validated_data["duration"]

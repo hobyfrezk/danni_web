@@ -6,6 +6,7 @@ from appointments.api.serializers import (
     AppointmentSerializer,
     AppointmentSerializerForCreate,
     AppointmentSerializerForCancel,
+    AppointmentSerializerForStaffCreate,
 )
 from appointments.models import Appointment
 from utilities import permissions, helpers
@@ -82,7 +83,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
     @action(methods=["POST"], detail=False, url_path="staff-create")
     def staff_create(self, request):
 
-        serializer = AppointmentSerializerForCancel(
+        serializer = AppointmentSerializerForStaffCreate(
             data=request.data
         )
 

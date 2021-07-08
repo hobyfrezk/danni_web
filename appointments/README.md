@@ -9,13 +9,15 @@
         - Permission: `IsStaff`
         - List all appointments
     - `POST` method
-        - Permission  
-      
+        - Permission  `IsAuthenticated`
+        - Create new appointment
+        
 
 - `/api/appointments/{appointment_id}/`
     - `GET` method
         - Permission: `IsObjectOwnerOrIsStaff`
         - Retrieve appointment
+        
         
 - `/api/appointments/{}/cancel`
     - `POST` method

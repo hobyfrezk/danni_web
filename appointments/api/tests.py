@@ -18,6 +18,7 @@ from testing.testcases import TestCase
 APPOINTMENTS_URL = '/api/appointments/'
 APPOINTMENTS_DETAIL_URL = '/api/appointments/{}/'
 CANCEL_URL = '/api/appointments/{}/cancel/'
+STAFF_CREATE_URL = '/api/appointments/staff-create/'
 
 class AppointmentsTest(TestCase):
 
@@ -98,6 +99,7 @@ class AppointmentsTest(TestCase):
 
     def test_client_create(self):
         data = {
+            "user": self.registered_user.id,
             "appointment_time": (datetime.now(pytz.utc) + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S"),
             "duration": "60",
             "services": [self.product_1.id, self.product_2.id],
@@ -112,6 +114,17 @@ class AppointmentsTest(TestCase):
         self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
         self.assertEqual(response.data["appointment"]["services"], [self.product_1.id, self.product_2.id])
         self.assertEqual(response.data["appointment"]["staff"], self.staff_user.staff.id)
+
+        # fake user_id to overbook
+        data = {
+            "user": self.admin_user.id,
+            "appointment_time": (datetime.now(pytz.utc) + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S"),
+            "duration": "60",
+            "services": [self.product_1.id, self.product_2.id],
+            "staff": self.staff_user.staff.id,
+        }
+        response = self.registered_client.post(APPOINTMENTS_URL, data)
+        self.assertEqual(response.status_code, 400)
 
     def test_cancel(self):
         cancel_url = CANCEL_URL.format(self.appointment_1.id)
@@ -137,3 +150,27 @@ class AppointmentsTest(TestCase):
         wrong_cancel_url = CANCEL_URL.format(9527)
         response = self.staff_client.post(wrong_cancel_url)
         self.assertEqual(response.status_code, 404)
+
+    def test_staff_create(self):
+        data = {
+            "user": self.registered_user.id,
+            "appointment_time": (datetime.now(pytz.utc) + timedelta(hours=48)).strftime("%Y-%m-%d %H:%M:%S"),
+            "duration": "60",
+            "services": [self.product_1.id, self.product_2.id],
+            "staff": self.admin_user.staff.id,
+        }
+
+        response = self.anonymous_client.post(STAFF_CREATE_URL, data)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.registered_client.post(STAFF_CREATE_URL, data)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.staff_client.post(STAFF_CREATE_URL, data)
+        self.assertEqual(response.status_code, 201)
+
+        # overbook -> 400
+        response = self.staff_client.post(STAFF_CREATE_URL, data)
+        self.assertEqual(response.status_code, 400)
+
+
