@@ -33,6 +33,7 @@ class Checkout(models.Model):
     gst = models.DecimalField(decimal_places=2, max_digits=2)
 
     checkout_snapshot = models.TextField()
+    notes = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

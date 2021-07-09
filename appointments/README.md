@@ -1,7 +1,14 @@
 #### Appointments API
 
 ##### Data models attributes:
-
+- _user_ (ForeignKey)
+- _appointment_time_ 
+- _duration_
+- _services_ (ManyToManyField)
+- _staff_ (ForeignKey)
+- _is_canceled_
+- _created_at_
+- _updated_at_
 
 ##### APIs
 - `/api/appointments/`
