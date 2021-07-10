@@ -109,7 +109,6 @@ class AppointmentsTest(TestCase):
         self.assertEqual(response.status_code, 403)
 
         response = self.registered_client.post(APPOINTMENTS_URL, data)
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
         self.assertEqual(response.data["appointment"]["services"], [self.product_1.id, self.product_2.id])

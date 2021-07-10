@@ -118,7 +118,7 @@
     "created_at": "2021-06-29T16:15:50.985052Z"
 }``
     - `DELETE` method
-        - Invoke a user from employee status
+        - Remove employee status from a user
         - Permission `IsAdmin`
         - Return ``{'success': True}``
         
