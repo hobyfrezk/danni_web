@@ -25,7 +25,7 @@ class Checkout(models.Model):
                                    on_delete=models.SET_NULL,
                                    related_name="checked_checkout_set")
 
-    products = models.ManyToManyField(Product)
+    products = models.ManyToManyField(Product, blank=True)
     type = models.IntegerField(choices=Type.choices)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
 
@@ -34,6 +34,8 @@ class Checkout(models.Model):
 
     checkout_snapshot = models.TextField()
     notes = models.TextField(null=True)
+
+    is_deleted = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

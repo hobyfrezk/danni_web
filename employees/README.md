@@ -145,3 +145,8 @@
     - `GET` method
         - Get appointments for an employee
         - Permission `IsStaff`
+
+- `'/api/employees/{employee_id}/checkouts/'` 
+    - `GET` method
+        - Get checkouts served by an employee
+        - Permission `IsStaff`

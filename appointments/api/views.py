@@ -51,7 +51,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
         }, status=200)
 
     def create(self, request, *args, **kwargs):
-        
+
         data = dict()
         for key in request.data:
             temp = request.data.getlist(key)
@@ -73,7 +73,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
             'success': True,
             'appointment': AppointmentSerializer(appointment).data
         }, status=201)
-
+ 
     @action(methods=["POST"], detail=True)
     def cancel(self, request, *args, **kwargs):
         appointment = self.get_object()

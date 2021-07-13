@@ -81,6 +81,7 @@ class TestCase(DjangoTestCase):
             is_admin=False,
             is_staff=False
         )
+        self.registered_user.customer
 
         self.registered_user2, self.registered_client2 = self.create_and_authenticate_client(
             TEST_USERNAME2,
@@ -89,6 +90,7 @@ class TestCase(DjangoTestCase):
             is_admin=False,
             is_staff=False
         )
+        self.registered_user2.customer
 
         self.staff_user, self.staff_client = self.create_and_authenticate_client(
             TEST_USERNAME_STAFF,

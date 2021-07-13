@@ -28,9 +28,9 @@ class CheckoutSerializerForCreate(serializers.ModelSerializer):
 
     def validate(self, data):
         user = data["user"]
-        appointment = data["appointment"]
+        appointment = data.get("appointment", None)
 
-        if user != appointment.user:
+        if appointment and user != appointment.user:
             raise exceptions.ValidationError({
                 'Appointment': "Referred appointment is not coincidence with user."
             })
