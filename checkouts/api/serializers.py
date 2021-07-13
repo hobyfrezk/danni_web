@@ -6,7 +6,17 @@ from checkouts.models import Checkout
 class CheckoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Checkout
-        fields = ('id', 'user', 'appointment', 'served_by', 'products', "notes", "checkout_snapshot", "created_at")
+        fields = (
+        'id',
+        'user',
+        'appointment',
+        'served_by',
+        'products',
+        "notes",
+        "checkout_snapshot",
+        "is_deleted",
+        "created_at",
+        "updated_at")
 
 
 class CheckoutSerializerForCreate(serializers.ModelSerializer):
@@ -54,4 +64,3 @@ class CheckoutSerializerForCreate(serializers.ModelSerializer):
         checkout.save()
 
         return checkout
-

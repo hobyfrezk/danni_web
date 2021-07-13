@@ -1,18 +1,17 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from checkouts.api.serializers import CheckoutSerializer, CheckoutSerializerForCreate
 from checkouts.models import Checkout
-from utilities import permissions, helpers
 from customers.api.serializers import CustomerSerializerForUpdateBalance
 from customers.models import Customer
+from utilities import permissions, helpers
+
 
 class CheckoutViewSet(viewsets.GenericViewSet,
                       viewsets.mixins.ListModelMixin,
                       viewsets.mixins.CreateModelMixin,
-                      viewsets.mixins.DestroyModelMixin,
-                      viewsets.mixins.UpdateModelMixin,
-                      viewsets.mixins.RetrieveModelMixin,
                       ):
     serializer_class = CheckoutSerializerForCreate
     queryset = Checkout.objects.all()
@@ -54,6 +53,27 @@ class CheckoutViewSet(viewsets.GenericViewSet,
         checkout = checkout_serializer.save()
         balance_serializer.save()
 
+        return Response({
+            'success': True,
+            'checkouts': CheckoutSerializer(checkout).data
+        }, status=201)
+
+    @action(methods=["POST"], detail=True)
+    def delete(self, request):
+        checkout = self.get_object()
+        customer = Customer.objects.get(user_id=checkout.user_id)
+
+        # TODO mysql atomic update.
+        if checkout.type == 0:
+            customer.balance = customer.balance + helpers.calculate_spending_amount(
+                checkout.amount, checkout.pst, checkout.gst)
+        else:
+            customer.balance = customer.balance - checkout.amount
+
+        checkout.is_deleted = True
+        checkout.save()
+        customer.save()
+        
         return Response({
             'success': True,
             'checkouts': CheckoutSerializer(checkout).data

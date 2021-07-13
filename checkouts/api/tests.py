@@ -5,7 +5,6 @@
 # Create a Spending checkout, check customer balance
 # Create a Recharge checkout, check customer balance
 # Create a S/R checkout, check customer balance
-# Update a checkout, check customer balance
 # Delete a checkout, check customer balance (soft deletion)
 
 from testing.testcases import TestCase
@@ -16,6 +15,7 @@ from decimal import Decimal
 CHECKOUTS_URL = '/api/checkouts/'
 CHECKOUTS_FOR_CUSTOMER = '/api/customers/{}/checkouts/'
 CHECKOUTS_FOR_STAFF = '/api/employees/{}/checkouts/'
+CHECKOUTS_DELETE_STAFF = '/api/checkouts/{}/delete/'
 
 class CheckoutsTest(TestCase):
 
@@ -177,10 +177,16 @@ class CheckoutsTest(TestCase):
         for client in [self.admin_client, self.staff_client]:
             n_checkouts = Checkout.objects.count()
             balance_before = Customer.objects.get(id=self.registered_user.customer.id).balance
-            total_amount = Decimal(data_spending["amount"] * (1 + data_spending["pst"] + data_spending["gst"]), ).quantize(Decimal('.01'))
+            total_amount = Decimal(data_spending["amount"] * (1 + data_spending["pst"] + data_spending["gst"])).quantize(Decimal('.01'))
             response = client.post(CHECKOUTS_URL, data_spending)
             balance_after = Customer.objects.get(id=self.registered_user.customer.id).balance
 
             self.assertEqual(response.status_code, 201)
             self.assertEqual(Checkout.objects.count() - n_checkouts, 1)
             self.assertEqual(balance_before - balance_after, total_amount)
+
+    def test_cancel(self):
+        for client, checkout in zip([self.anonymous_client, self.registered_client, self.registered_client2],
+                                    [self.checkout_1, self.checkout_2, self.checkout_3]):
+            response = client.post(CHECKOUTS_URL, data_spending)
+            self.assertEqual(response.status_code, 403)
