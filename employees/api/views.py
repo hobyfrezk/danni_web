@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from appointments.api.serializers import AppointmentSerializer
 from appointments.models import Appointment
+from checkouts.api.serializers import CheckoutSerializer
+from checkouts.models import Checkout
 from employees.api.serializers import (
     EmployeeSerializer,
     EmployeeSerializerForCreate,
@@ -39,7 +41,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
 
-        if self.action == "appointments":
+        if self.action in ["appointments", "checkouts"]:
             return [permissions.IsStaff()]
 
         return [permissions.IsAdminUser()]
@@ -135,4 +137,16 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         return Response({
             'success': 'True',
             'appointments': serializer.data
+        }, status=200)
+
+    @action(methods=["GET"], detail=True)
+    def checkouts(self, request, *args, **kwargs):
+        staff = self.get_object()
+        checkouts = Checkout.objects.filter(served_by_id=staff.id)
+
+        serializer = CheckoutSerializer(checkouts, many=True)
+
+        return Response({
+            'success': 'True',
+            'checkouts': serializer.data
         }, status=200)

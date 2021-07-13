@@ -18,12 +18,12 @@ from django.urls import include, path
 from rest_framework import routers
 
 from accounts.api.views import AccountViewSet
+from appointments.api.views import AppointmentViewSet
 from categories.api.views import CategoryViewSet
+from checkouts.api.views import CheckoutViewSet
+from customers.api.views import CustomerViewSet
 from employees.api.views import EmployeeViewSet
 from products.api.views import ProductViewSet
-from customers.api.views import CustomerViewSet
-from appointments.api.views import AppointmentViewSet
-
 
 router = routers.DefaultRouter()
 router.register(r'api/accounts', AccountViewSet, basename='accounts')
@@ -32,7 +32,7 @@ router.register(r'api/products', ProductViewSet, basename='products')
 router.register(r'api/employees', EmployeeViewSet, basename='employees')
 router.register(r'api/customers', CustomerViewSet, basename='customers')
 router.register(r'api/appointments', AppointmentViewSet, basename='appointments')
-
+router.register(r'api/checkouts', CheckoutViewSet, basename='checkouts')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 
 from customers.models import Customer
 
@@ -62,7 +62,6 @@ class CustomerSerializerForUpdateInfo(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-
         for key in validated_data:
             setattr(instance, key, validated_data[key])
 
@@ -73,10 +72,17 @@ class CustomerSerializerForUpdateInfo(serializers.ModelSerializer):
 class CustomerSerializerForUpdateBalance(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('balance', )
+        fields = ('balance',)
+
+    def validate(self, data):
+        if self.instance.balance + data["balance"] <= 0:
+            raise exceptions.ValidationError({
+                'Balance': "Error: Over spending, balance will be negative after this checkout."
+            })
+
+        return data
 
     def update(self, instance, validated_data):
-
         instance.balance += validated_data['balance']
 
         instance.save()
@@ -86,10 +92,9 @@ class CustomerSerializerForUpdateBalance(serializers.ModelSerializer):
 class CustomerSerializerForUpdateTier(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('tier', )
+        fields = ('tier',)
 
     def update(self, instance, validated_data):
-
         instance.tier = validated_data['tier']
 
         instance.save()

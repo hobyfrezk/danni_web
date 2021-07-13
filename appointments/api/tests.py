@@ -36,6 +36,11 @@ class AppointmentsTest(TestCase):
                 - self.product_2
             - self.category_2,
             - self.category_3,
+
+        initialize_appointments()
+            - self.appointment_1: one hour later,
+            - self.appointment_2: appointment yesterday
+            - self.appointment_3: appointment ongoing
         """
 
         self.initialize_account()

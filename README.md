@@ -1,5 +1,6 @@
 # A Nail Solon Website
-A Django + React web application for MyNails Salon.
+A Django + React web application for Salon Store. 
+This is just Django/backend part.
 
 APIs
 - Account Related
@@ -16,25 +17,33 @@ APIs
 - Customer Related
     - Get my profile
         - GET `api/customers/{id}/`
+    - Update my profile
+        - POST `api/customers/{id}/`
     - Check available slots #TODO
     - Make an appointment
         - POST `api/appointments/`
-    - Check my appointments
+    - Check my appointments _pagination_
         - GET `api/customers/{id}/appointments/`
-    - Cancel a appointment
+    - Cancel an appointment
         - POST `api/appointments/{id}/cancel/`
-    - Check my checkouts history #TODO        
+    - Check my checkouts history _pagination_ #TODO        
     
 
 - Staff
+    - List all customers profiles _pagination_
+        - GET `api/customers/` 
     - Get a customer profile
         - GET `api/customers/{id}/`
-    - Check reserved appointments
+    - List all appointments _pagination_
+        - GET `api/appointments/`
+    - Check reserved appointments _pagination_
         - GET `api/employees/{id}/appointments/`
     - Update a reserved appointment #TODO
     - Cancel a reserved appointment
         - POST `api/appointments/{id}/cancel/`
-    - List all checkouts
+    - Make an appointment for customer
+        - POST `api/appointments/staff-create`
+    - List all checkouts _pagination_
         - GET `api/checkouts/`
     - Make a checkout (make recharges or/and spendings)
         - POST `api/checkouts/`
@@ -67,4 +76,3 @@ More Detail for APIs can be found in following links.
 - [Customer API](https://github.com/hobyfrezk/danni_web/blob/main/customers/README.md)
 - [Appointments API](https://github.com/hobyfrezk/danni_web/blob/main/appointments/README.md)
 - [Checkouts API](https://github.com/hobyfrezk/danni_web/blob/main/checouts/README.md)
-

@@ -41,9 +41,12 @@
 
 
 - *<ins>/api/customers/{customer_id}/appointments/</ins>* 
-    - `POST` Method
+    - `GET` Method
     - List appointments for a customer
     - Permission: `IsObjectOwnerOrIsStaff`
    
    
-- List checkouts #TODO
+- *<ins>/api/customers/{customer_id}/checkouts/</ins>* 
+    - `GET` Method
+    - List checkouts for a customer
+    - Permission: `IsObjectOwnerOrIsStaff`
