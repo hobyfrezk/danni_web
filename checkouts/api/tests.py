@@ -15,7 +15,7 @@ from decimal import Decimal
 CHECKOUTS_URL = '/api/checkouts/'
 CHECKOUTS_FOR_CUSTOMER = '/api/customers/{}/checkouts/'
 CHECKOUTS_FOR_STAFF = '/api/employees/{}/checkouts/'
-CHECKOUTS_DELETE_STAFF = '/api/checkouts/{}/delete/'
+CHECKOUTS_DELETE = '/api/checkouts/{}/delete/'
 
 class CheckoutsTest(TestCase):
 
@@ -188,5 +188,17 @@ class CheckoutsTest(TestCase):
     def test_cancel(self):
         for client, checkout in zip([self.anonymous_client, self.registered_client, self.registered_client2],
                                     [self.checkout_1, self.checkout_2, self.checkout_3]):
-            response = client.post(CHECKOUTS_URL, data_spending)
+            url = CHECKOUTS_DELETE.format(checkout.id)
+            response = client.post(url, {})
             self.assertEqual(response.status_code, 403)
+
+        for client, checkout in zip([self.staff_client, self.admin_client, self.admin_client],
+                                    [self.checkout_1, self.checkout_2, self.checkout_3]):
+
+            balance_before = Customer.objects.get(user=checkout.user).balance
+            url = CHECKOUTS_DELETE.format(checkout.id)
+            response = client.post(url, {})
+            balance_after = Customer.objects.get(user=checkout.user).balance
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.data["checkout"]["is_deleted"], True)
+            self.assertNotEqual(balance_after, balance_before)

@@ -7,6 +7,7 @@ from checkouts.models import Checkout
 from customers.api.serializers import CustomerSerializerForUpdateBalance
 from customers.models import Customer
 from utilities import permissions, helpers
+from django.db.models import F
 
 
 class CheckoutViewSet(viewsets.GenericViewSet,
@@ -59,22 +60,19 @@ class CheckoutViewSet(viewsets.GenericViewSet,
         }, status=201)
 
     @action(methods=["POST"], detail=True)
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         checkout = self.get_object()
-        customer = Customer.objects.get(user_id=checkout.user_id)
-
-        # TODO mysql atomic update.
-        if checkout.type == 0:
-            customer.balance = customer.balance + helpers.calculate_spending_amount(
-                checkout.amount, checkout.pst, checkout.gst)
-        else:
-            customer.balance = customer.balance - checkout.amount
-
         checkout.is_deleted = True
         checkout.save()
-        customer.save()
-        
+
+        # atomic operation to update customer balance
+        if checkout.type == 0:
+            reverse_balance = -helpers.calculate_spending_amount(checkout.amount, checkout.pst, checkout.gst)
+        else:
+            reverse_balance = -checkout.amount
+        Customer.objects.filter(user_id=checkout.user_id).update(balance=F('balance') + reverse_balance)
+
         return Response({
             'success': True,
-            'checkouts': CheckoutSerializer(checkout).data
+            'checkout': CheckoutSerializer(checkout).data
         }, status=201)
