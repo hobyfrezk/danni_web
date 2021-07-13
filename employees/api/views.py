@@ -47,6 +47,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         return [permissions.IsAdminUser()]
 
     def list(self, request, *args, **kwargs):
+        # TODO determine if this view and retrieve view should be removed, and permission control
         employees = Employee.objects.all().prefetch_related("user"). \
             prefetch_related('services__category')
 

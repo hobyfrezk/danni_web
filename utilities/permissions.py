@@ -17,7 +17,7 @@ class IsStaff(BasePermission):
     message = PERMISSION_MSG
 
     def has_permission(self, request, view):
-        return request.user.is_staff == True
+        return (request.user.is_staff == True) or (request.user.is_superuser == True)
 
     def has_object_permission(self, request, view, obj):
 
@@ -30,7 +30,7 @@ class AllowAny(BasePermission):
 class IsObjectOwnerOrIsStaff(BasePermission):
     message = PERMISSION_MSG
     def has_permission(self, request, view):
-        return True
+        return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         return (request.user == obj.user) or \
