@@ -6,7 +6,9 @@ from appointments.models import Appointment
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = ('id', 'user', 'appointment_time', 'duration', 'services', 'staff', 'created_at', 'updated_at')
+        fields = (
+            'id', 'user', 'appointment_time', 'duration', 'services', 'staff', 'is_canceled', 'created_at', 'updated_at'
+        )
 
 
 class AppointmentSerializerForCreate(serializers.ModelSerializer):
@@ -51,13 +53,13 @@ class AppointmentSerializerForCancel(serializers.ModelSerializer):
 
         return self.instance
 
+
 class AppointmentSerializerForStaffCreate(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ('user', 'appointment_time', 'duration', 'services', 'staff')
 
     def create(self, validated_data):
-
         user = validated_data["user"]
         appointment_time = validated_data["appointment_time"]
         duration = validated_data["duration"]

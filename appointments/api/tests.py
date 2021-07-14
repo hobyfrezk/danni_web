@@ -70,7 +70,7 @@ class AppointmentsTest(TestCase):
 
         response = self.staff_client.get(APPOINTMENTS_URL)
         self.assertEqual(response.status_code, 200)
-        appointments = response.data.get("appointments")
+        appointments = response.data.get("data")
         self.assertEqual(len(appointments), 3)
         self.assertEqual(appointments[0]["id"], self.appointment_1.id)
         self.assertEqual(appointments[1]["id"], self.appointment_2.id)
@@ -78,7 +78,7 @@ class AppointmentsTest(TestCase):
 
         response = self.admin_client.get(APPOINTMENTS_URL)
         self.assertEqual(response.status_code, 200)
-        appointments = response.data.get("appointments")
+        appointments = response.data.get("data")
         self.assertEqual(len(appointments), 3)
         self.assertEqual(appointments[0]["id"], self.appointment_1.id)
         self.assertEqual(appointments[1]["id"], self.appointment_2.id)

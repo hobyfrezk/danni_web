@@ -22,30 +22,37 @@ APIs
     - Check available slots #TODO
     - Make an appointment
         - POST `api/appointments/`
-    - Check my appointments _pagination_
+    - Check my appointments (_pagination_)
         - GET `api/customers/{id}/appointments/`
     - Cancel an appointment
         - POST `api/appointments/{id}/cancel/`
-    - Check my checkouts history _pagination_ #TODO        
+    - Check my checkouts history (_pagination_)
+        - GET `api/customers/{id}/checkouts/`
     
 
+
 - Staff
-    - List all customers profiles _pagination_
+    - List all customers profiles (_pagination_)
         - GET `api/customers/` 
     - Get a customer profile
         - GET `api/customers/{id}/`
-    - List all appointments _pagination_
+    - List all appointments (_pagination_)
         - GET `api/appointments/`
-    - Check reserved appointments _pagination_
-        - GET `api/employees/{id}/appointments/`
-    - Update a reserved appointment #TODO
-    - Cancel a reserved appointment
+    - List all appointments for an customer (_pagination_)
+        - GET `api/customers/{id}/appointments/`
+    - List appointments of an employee (_pagination_)
+        - GET `api/employees/{id}/appointments/`    
+    - Make an appointment for a customer
+        - POST `api/appointments/staff-create/`
+    - Cancel an appointment
         - POST `api/appointments/{id}/cancel/`
-    - Make an appointment for customer
-        - POST `api/appointments/staff-create`
-    - List all checkouts _pagination_
+    - List all checkouts (_pagination_)
         - GET `api/checkouts/`
-    - Make a checkout (make recharges or/and spendings)
+    - List all checkouts for an employee (_pagination_)
+        - GET `api/employees/{id}/checkouts/`
+    - List all checkouts for a customer (_pagination_)
+        - GET `api/customers/{id}/checkouts/`
+    - Make a checkout (make recharges or/and spending)
         - POST `api/checkouts/`
     - Update a checkout
         - POST `api/checkouts/{id}/`

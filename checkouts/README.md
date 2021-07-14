@@ -18,7 +18,7 @@
 ##### APIs
 - `/api/checkouts/`
     - `GET` method
-        - List all checkouts
+        - List all checkouts (_pagination enabled_)
         - Permission: `IsStaff`
     - `POST` method
         - Create new checkout

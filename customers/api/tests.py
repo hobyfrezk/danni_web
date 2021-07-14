@@ -86,6 +86,21 @@ class CustomerApiTests(TestCase):
         for key in raw_data:
             self.assertEqual(response.data["customer"][key], data[key])
 
+
+    def test_list_customer(self):
+        # permission check
+        for client in [self.anonymous_client, self.registered_client, self.registered_client2]:
+            response = client.get(CUSTOMER_URL)
+            self.assertEquals(response.status_code, 403)
+
+        for client in [self.admin_client, self.staff_client]:
+            response = client.get(CUSTOMER_URL)
+            self.assertEquals(response.status_code, 200)
+            customers = response.data.get("data")
+            self.assertEqual(len(customers), 2)
+            self.assertEqual(customers[0]["id"], self.registered_user.customer.id)
+            self.assertEqual(customers[1]["id"], self.registered_user2.customer.id)
+
     def test_create_customer(self):
         # create new account without give profile data -> 201
         data = default_data_dict
@@ -281,7 +296,8 @@ class CustomerApiTests(TestCase):
 
         response = self.registered_client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["appointments"]), 3)
+        appointments = response.data["data"]
+        self.assertEqual(len(appointments), 3)
 
         response = self.registered_client2.get(url)
         self.assertEqual(response.status_code, 403)

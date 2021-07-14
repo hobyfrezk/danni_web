@@ -13,7 +13,7 @@ from employees.api.serializers import (
     EmployeeSerializerForRemoveServices,
 )
 from employees.models import Employee
-from utilities import permissions, helpers
+from utilities import permissions, helpers, paginations
 
 
 class EmployeeViewSet(viewsets.GenericViewSet,
@@ -47,7 +47,6 @@ class EmployeeViewSet(viewsets.GenericViewSet,
         return [permissions.IsAdminUser()]
 
     def list(self, request, *args, **kwargs):
-        # TODO determine if this view and retrieve view should be removed, and permission control
         employees = Employee.objects.all().prefetch_related("user"). \
             prefetch_related('services__category')
 
@@ -131,22 +130,18 @@ class EmployeeViewSet(viewsets.GenericViewSet,
     def appointments(self, request, *args, **kwargs):
         employee = self.get_object()
         appointments = Appointment.objects.filter(staff=employee)
+        page = self.paginate_queryset(appointments)
 
-        serializer = AppointmentSerializer(appointments, many=True)
+        serializer = AppointmentSerializer(page, many=True)
 
-        return Response({
-            'success': 'True',
-            'appointments': serializer.data
-        }, status=200)
+        return self.get_paginated_response(serializer.data)
 
     @action(methods=["GET"], detail=True)
     def checkouts(self, request, *args, **kwargs):
         staff = self.get_object()
         checkouts = Checkout.objects.filter(served_by_id=staff.id)
+        page = self.paginate_queryset(checkouts)
 
-        serializer = CheckoutSerializer(checkouts, many=True)
+        serializer = CheckoutSerializer(page, many=True)
 
-        return Response({
-            'success': 'True',
-            'checkouts': serializer.data
-        }, status=200)
+        return self.get_paginated_response(serializer.data)

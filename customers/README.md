@@ -19,7 +19,7 @@
     
 -  *<ins> /api/customers/ </ins>*
     - `GET` Method
-    - List all customers
+    - List all customers (_pagination enabled_)
     - Permission: `IsStaff`
     
 - *<ins>/api/customers/{customer_id}/</ins>*
@@ -42,11 +42,11 @@
 
 - *<ins>/api/customers/{customer_id}/appointments/</ins>* 
     - `GET` Method
-    - List appointments for a customer
+    - List appointments for a customer (_pagination enabled_)
     - Permission: `IsObjectOwnerOrIsStaff`
    
    
 - *<ins>/api/customers/{customer_id}/checkouts/</ins>* 
     - `GET` Method
-    - List checkouts for a customer
+    - List checkouts for a customer (_pagination enabled_)
     - Permission: `IsObjectOwnerOrIsStaff`
