@@ -92,11 +92,12 @@ class CheckoutsTest(TestCase):
 
         for client in [self.admin_client, self.staff_client]:
             response = client.get(CHECKOUTS_URL)
+            checkouts = response.data.get("data")
             self.assertEqual(response.status_code, 200)
-            self.assertEquals(len(response.data["checkouts"]), 3)
-            self.assertEquals(response.data["checkouts"][0]["id"], self.checkout_1.id)
-            self.assertEquals(response.data["checkouts"][1]["id"], self.checkout_2.id)
-            self.assertEquals(response.data["checkouts"][2]["id"], self.checkout_3.id)
+            self.assertEquals(len(checkouts), 3)
+            self.assertEquals(checkouts[0]["id"], self.checkout_1.id)
+            self.assertEquals(checkouts[1]["id"], self.checkout_2.id)
+            self.assertEquals(checkouts[2]["id"], self.checkout_3.id)
 
 
     def test_retrieve_for_customer(self):
@@ -109,7 +110,8 @@ class CheckoutsTest(TestCase):
         for client in [self.admin_client, self.staff_client, self.registered_client]:
             response = client.get(url)
             self.assertEqual(response.status_code, 200)
-            self.assertEquals(len(response.data["checkouts"]), 2)
+            checkouts = response.data.get("data")
+            self.assertEquals(len(checkouts), 2)
 
 
     def test_retrieve_for_employees(self):
@@ -120,14 +122,16 @@ class CheckoutsTest(TestCase):
 
         for client in [self.admin_client, self.staff_client]:
             response = client.get(url)
+            checkouts = response.data.get("checkouts")
             self.assertEqual(response.status_code, 200)
-            self.assertEquals(len(response.data["checkouts"]), 2)
+            self.assertEquals(len(checkouts), 2)
 
         url = CHECKOUTS_FOR_STAFF.format(self.admin_user.staff.id)
         for client in [self.admin_client, self.staff_client]:
             response = client.get(url)
+            checkouts = response.data.get("checkouts")
             self.assertEqual(response.status_code, 200)
-            self.assertEquals(len(response.data["checkouts"]), 1)
+            self.assertEquals(len(checkouts), 1)
 
     def test_create_spending_checkouts(self):
         data_spending = {

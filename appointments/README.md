@@ -14,7 +14,7 @@
 - `/api/appointments/`
     - `GET` method
         - Permission: `IsStaff`
-        - List all appointments
+        - List all appointments (_pagination enabled_)
     - `POST` method
         - Permission  `IsAuthenticated`
         - Create new appointment

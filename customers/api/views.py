@@ -9,11 +9,10 @@ from checkouts.models import Checkout
 from customers.api.serializers import (
     CustomerSerializer,
     CustomerSerializerForUpdateInfo,
-    CustomerSerializerForUpdateBalance,
     CustomerSerializerForUpdateTier
 )
 from customers.models import Customer
-from utilities import permissions, helpers
+from utilities import permissions, helpers, paginations
 
 
 class CustomerViewSet(viewsets.GenericViewSet,
@@ -32,6 +31,7 @@ class CustomerViewSet(viewsets.GenericViewSet,
     """
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    pagination_class = paginations.Pagination
 
     def get_permissions(self):
         if self.action in ['retrieve', 'update_info', 'list_appointments', 'list_checkouts', 'appointments',
@@ -45,15 +45,11 @@ class CustomerViewSet(viewsets.GenericViewSet,
 
     def list(self, request, *args, **kwargs):
         customers = Customer.objects.all()
+        page = self.paginate_queryset(customers)
 
-        serializer = CustomerSerializer(
-            customers, many=True,
-        )
+        serializer = CustomerSerializer(page, many=True)
 
-        return Response({
-            'success': True,
-            'customers': serializer.data,
-        }, status=200)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
         customer = self.get_object()
@@ -125,22 +121,18 @@ class CustomerViewSet(viewsets.GenericViewSet,
     def appointments(self, request, *args, **kwargs):
         customer = self.get_object()
         appointments = Appointment.objects.filter(user_id=customer.user_id)
+        page = self.paginate_queryset(appointments)
 
-        serializer = AppointmentSerializer(appointments, many=True)
+        serializer = AppointmentSerializer(page, many=True)
 
-        return Response({
-            'success': 'True',
-            'appointments': serializer.data
-        }, status=200)
+        return self.get_paginated_response(serializer.data)
 
     @action(methods=["GET"], detail=True)
     def checkouts(self, request, *args, **kwargs):
         customer = self.get_object()
         checkouts = Checkout.objects.filter(user_id=customer.user_id)
+        page = self.paginate_queryset(checkouts)
 
-        serializer = CheckoutSerializer(checkouts, many=True)
+        serializer = CheckoutSerializer(page, many=True)
 
-        return Response({
-            'success': 'True',
-            'checkouts': serializer.data
-        }, status=200)
+        return self.get_paginated_response(serializer.data)

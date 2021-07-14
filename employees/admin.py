@@ -6,4 +6,4 @@ from employees.models import Employee
 @admin.register(Employee)
 class CategoryAdmin(admin.ModelAdmin):
     # date_hierarchy = 'created_at'
-    list_display = ('nickname', 'created_at')
+    list_display = ('id', 'user', 'nickname', 'created_at')

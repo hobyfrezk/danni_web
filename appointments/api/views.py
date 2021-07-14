@@ -9,7 +9,7 @@ from appointments.api.serializers import (
     AppointmentSerializerForStaffCreate,
 )
 from appointments.models import Appointment
-from utilities import permissions, helpers
+from utilities import permissions, helpers, paginations
 
 
 class AppointmentViewSet(viewsets.GenericViewSet,
@@ -19,6 +19,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
                          ):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
+    pagination_class = paginations.Pagination
 
     def get_permissions(self):
         if self.action == "create":
@@ -31,16 +32,12 @@ class AppointmentViewSet(viewsets.GenericViewSet,
 
     def list(self, request, *args, **kwargs):
         appointments = Appointment.objects.all()
+        page = self.paginate_queryset(appointments)
 
-        serializer = AppointmentSerializer(
-            appointments,
-            many=True,
-        )
+        serializer = AppointmentSerializer(page, many=True,)
 
-        return Response({
-            'success': True,
-            'appointments': serializer.data
-        }, status=200)
+        return self.get_paginated_response(serializer.data)
+
 
     def retrieve(self, request, *args, **kwargs):
         appointment = self.get_object()
@@ -73,7 +70,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
             'success': True,
             'appointment': AppointmentSerializer(appointment).data
         }, status=201)
- 
+
     @action(methods=["POST"], detail=True)
     def cancel(self, request, *args, **kwargs):
         appointment = self.get_object()

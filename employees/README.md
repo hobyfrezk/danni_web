@@ -143,10 +143,10 @@
 
 - `'/api/employees/{employee_id}/appointments/'` 
     - `GET` method
-        - Get appointments for an employee
+        - Get appointments for an employee (_pagination enabled_)
         - Permission `IsStaff`
 
 - `'/api/employees/{employee_id}/checkouts/'` 
     - `GET` method
-        - Get checkouts served by an employee
+        - Get checkouts served by an employee (_pagination enabled_)
         - Permission `IsStaff`

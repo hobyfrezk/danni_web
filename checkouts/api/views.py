@@ -6,7 +6,8 @@ from checkouts.api.serializers import CheckoutSerializer, CheckoutSerializerForC
 from checkouts.models import Checkout
 from customers.api.serializers import CustomerSerializerForUpdateBalance
 from customers.models import Customer
-from utilities import permissions, helpers
+from utilities import permissions, helpers, paginations
+
 from django.db.models import F
 
 
@@ -16,19 +17,18 @@ class CheckoutViewSet(viewsets.GenericViewSet,
                       ):
     serializer_class = CheckoutSerializerForCreate
     queryset = Checkout.objects.all()
+    pagination_class = paginations.Pagination
 
     def get_permissions(self):
         return [permissions.IsStaff()]
 
     def list(self, request, *args, **kwargs):
         checkouts = Checkout.objects.all()
+        page = self.paginate_queryset(checkouts)
 
-        serializer = CheckoutSerializer(checkouts, many=True)
+        serializer = CheckoutSerializer(page, many=True)
 
-        return Response({
-            "success": True,
-            "checkouts": serializer.data,
-        }, status=200)
+        return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         checkout_serializer = CheckoutSerializerForCreate(data=request.data, context={"request": request})
