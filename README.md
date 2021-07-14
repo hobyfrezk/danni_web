@@ -39,7 +39,7 @@ APIs
     - List all appointments (_pagination_)
         - GET `api/appointments/`
     - List all appointments for an customer (_pagination_)
-        - GET `api/customers/{}/appointments/`
+        - GET `api/customers/{id}/appointments/`
     - List appointments of an employee (_pagination_)
         - GET `api/employees/{id}/appointments/`    
     - Make an appointment for a customer
@@ -49,9 +49,9 @@ APIs
     - List all checkouts (_pagination_)
         - GET `api/checkouts/`
     - List all checkouts for an employee (_pagination_)
-        - GET `api/employees/{}/checkouts/`
+        - GET `api/employees/{id}/checkouts/`
     - List all checkouts for a customer (_pagination_)
-        - GET `api/customers/{}/checkouts/`
+        - GET `api/customers/{id}/checkouts/`
     - Make a checkout (make recharges or/and spending)
         - POST `api/checkouts/`
     - Update a checkout
