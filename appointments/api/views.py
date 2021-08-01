@@ -31,6 +31,7 @@ class AppointmentViewSet(viewsets.GenericViewSet,
         return [permissions.IsStaff()]
 
     def list(self, request, *args, **kwargs):
+        # TODO prefetch related for products
         appointments = Appointment.objects.all()
         page = self.paginate_queryset(appointments)
 
