@@ -9,9 +9,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from accounts.api.serializers import SignupSerializer, LoginSerializer
-from accounts.api.serializers import UserSerializer, UserSerializerWithProfileDetail
+from accounts.api.serializers import UserSerializerWithProfileDetail
 from customers.api.serializers import CustomerSerializerForCreate
 from utilities import helpers
+
 
 class AccountViewSet(viewsets.GenericViewSet):
     """
@@ -48,14 +49,12 @@ class AccountViewSet(viewsets.GenericViewSet):
     @action(methods=['POST'], detail=False)
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
-
         if not serializer.is_valid():
             return helpers.serializer_error_response(serializer)
 
         username = serializer.validated_data['username'].lower()
         password = serializer.validated_data['password']
         user = django_authenticate(username=username, password=password)
-
         if not user or user.is_anonymous:
             return Response({
                 "success": False,
@@ -63,7 +62,6 @@ class AccountViewSet(viewsets.GenericViewSet):
             }, status=400)
 
         django_login(request, user)
-
         return Response({
             "success": True,
             "user": UserSerializerWithProfileDetail(user).data,

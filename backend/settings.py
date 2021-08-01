@@ -25,7 +25,7 @@ SECRET_KEY = '%b-ga4*4=0l&un^f-c0b1n&(k)4*#iv%yqwq3mkic=%c4_dceh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost', 'localhost:3000']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 3rd parties
     'rest_framework',
     'django_filters',
+    "corsheaders",
 
     # my_app
     'accounts',
@@ -61,6 +62,8 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    # cors
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +72,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://localhost:8000',
+)
+
+CORS_ALLOW_ALL_ORIGINS = True
+#
+# CSRF_COOKIE_SAMESITE = 'Strict'
+# SESSION_COOKIE_SAMESITE = 'Strict'
+# CSRF_COOKIE_HTTPONLY = False  # False since we will grab it via universal-cookies
+# SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -123,6 +141,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization

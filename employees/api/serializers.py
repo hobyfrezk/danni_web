@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from accounts.api.views import UserSerializer
+from accounts.api.serializers import UserSerializer
 from employees.models import Employee
 from products.api.serializers import ProductSerializer
 
