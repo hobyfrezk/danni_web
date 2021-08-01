@@ -187,10 +187,10 @@ class EmployeesApiTest(TestCase):
 
         response = self.staff_client.get(url)
         self.assertEqual(response.status_code, 200)
-        appointments = response.data["appointments"]
+        appointments = response.data["data"]
         self.assertEqual(len(appointments), 3)
 
         response = self.admin_client.get(url)
         self.assertEqual(response.status_code, 200)
-        appointments = response.data["appointments"]
+        appointments = response.data["data"]
         self.assertEqual(len(appointments), 3)

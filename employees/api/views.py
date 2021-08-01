@@ -36,6 +36,7 @@ class EmployeeViewSet(viewsets.GenericViewSet,
 
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    pagination_class = paginations.Pagination
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
