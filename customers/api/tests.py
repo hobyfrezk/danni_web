@@ -48,7 +48,6 @@ class CustomerApiTests(TestCase):
 
         count_after = Customer.objects.count()
         self.assertEqual(count_after - count_before, 1)
-
         self.assertEqual(response.data["user"]["username"], data['username'])
         self.assertEqual(response.data["user"]["profile"]['first_name'], data.get('first_name', ''))
         self.assertEqual(response.data["user"]["profile"]['last_name'], data.get('last_name', ''))

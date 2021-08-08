@@ -122,14 +122,14 @@ class CheckoutsTest(TestCase):
 
         for client in [self.admin_client, self.staff_client]:
             response = client.get(url)
-            checkouts = response.data.get("checkouts")
+            checkouts = response.data.get("data")
             self.assertEqual(response.status_code, 200)
             self.assertEquals(len(checkouts), 2)
 
         url = CHECKOUTS_FOR_STAFF.format(self.admin_user.staff.id)
         for client in [self.admin_client, self.staff_client]:
             response = client.get(url)
-            checkouts = response.data.get("checkouts")
+            checkouts = response.data.get("data")
             self.assertEqual(response.status_code, 200)
             self.assertEquals(len(checkouts), 1)
 

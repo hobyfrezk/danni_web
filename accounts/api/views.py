@@ -8,8 +8,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from accounts.api.serializers import SignupSerializer, LoginSerializer
-from accounts.api.serializers import UserSerializerWithProfileDetail
+from accounts.api.serializers import (
+    SignupSerializer,
+    LoginSerializer,
+    UserSerializerWithProfileDetail
+)
 from customers.api.serializers import CustomerSerializerForCreate
 from utilities import helpers
 
