@@ -8,6 +8,8 @@ CATEGORY_DETAIL_URL = '/api/categories/{}/'
 
 class CategoryApiTests(TestCase):
     def setUp(self):
+        self.clear_cache()
+
         # initialize_testing_accounts
         # self.anonymous_client, self.registered_client, self.admin_client
         self.initialize_account()

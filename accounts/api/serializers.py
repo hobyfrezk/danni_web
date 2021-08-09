@@ -3,6 +3,7 @@ from abc import ABC
 from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions
 from customers.api.serializers import CustomerSerializer
+from customers.services import CustomerService
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +15,7 @@ class UserSerializerWithProfileDetail(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
     def get_profile(self, obj):
-        return CustomerSerializer(obj.customer).data
+        return CustomerSerializer(CustomerService.get_customer_through_cache(obj.id)).data
 
     class Meta:
         model = User

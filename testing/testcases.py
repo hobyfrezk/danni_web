@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import pytz
 from django.contrib.auth.models import User
+from django.core.cache import caches
 from django.test import TestCase as DjangoTestCase
 from rest_framework.test import APIClient
 
@@ -27,6 +28,9 @@ TEST_PASSWORD_STAFF = 'staff_test_pwd'
 
 
 class TestCase(DjangoTestCase):
+
+    def clear_cache(self):
+        caches['testing'].clear()
 
     @staticmethod
     def _create_user(username, email, password, is_admin, is_staff):

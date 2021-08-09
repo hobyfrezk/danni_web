@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from products.models import Product
-
+from accounts.services import UserService
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
@@ -19,6 +19,10 @@ class Employee(models.Model):
 
     def __str__(self):
         return 'staff: {}'.format(self.nickname or self.id)
+
+    @property
+    def cached_user(self):
+        return UserService.get_user_through_cache(self.user_id)
 
 
 def get_staff_data(user):

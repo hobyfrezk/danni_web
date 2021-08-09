@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from utilities.cache_listeners import customer_changed, user_changed
+from django.db.models.signals import post_save, pre_delete
+
+from utilities.cache_listeners import user_changed, customer_changed
 
 class Customer(models.Model):
     class Gender(models.IntegerChoices):
@@ -39,19 +43,24 @@ class Customer(models.Model):
         user_name = getattr(self.user, "username", "Null_user")
         return f"Username {user_name}"
 
-def _create_customer_profile(user):
-    profile, _ = Customer.objects.get_or_create(user=user)
-    return profile
-
 
 def get_customer_data(user):
+    from customers.services import CustomerService
+
     if hasattr(user, '_cached_customer_profile'):
         return getattr(user, '_cached_customer_profile')
 
-    profile = _create_customer_profile(user)
+    profile = CustomerService.get_customer_through_cache(user_id=user.id)
     setattr(user, '_cached_customer_profile', profile)
 
     return profile
 
 
 User.customer = property(get_customer_data)
+
+# hook up with listeners to invalidate cache
+pre_delete.connect(user_changed, sender=User)
+post_save.connect(user_changed, sender=User)
+
+pre_delete.connect(customer_changed, sender=Customer)
+post_save.connect(customer_changed, sender=Customer)

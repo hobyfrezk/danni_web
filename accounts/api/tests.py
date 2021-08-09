@@ -15,6 +15,8 @@ TEST_PASSWORD = 'admin_test_pwd'
 class AccountTest(TestCase):
 
     def setUp(self):
+        self.clear_cache()
+
         self.client = self.anonymous_client
         self.create_user(TEST_USERNAME, TEST_EMAIL, TEST_PASSWORD)
 

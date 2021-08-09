@@ -7,7 +7,8 @@ from products.api.serializers import ProductSerializer
 
 class EmployeeSerializer(serializers.ModelSerializer):
     services = ProductSerializer(many=True)
-    user = UserSerializer()
+    # TODO ADD CACHE
+    user = UserSerializer(source="cached_user")
 
     class Meta:
         model = Employee

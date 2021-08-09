@@ -7,6 +7,7 @@ from django.db import models
 from employees.models import Employee
 from products.models import Product
 
+from accounts.services import UserService
 
 class Appointment(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
@@ -53,6 +54,11 @@ class Appointment(models.Model):
     def end_time(self):
         time_change = timedelta(minutes=self.duration)
         return self.appointment_time + time_change
+
+    @property
+    def cached_user(self):
+        return UserService.get_user_through_cache(self.user_id)
+
 
     def __str__(self):
         return f"{self.user} at {self.appointment_time} with {self.staff}"

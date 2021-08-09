@@ -40,6 +40,8 @@ class CheckoutsTest(TestCase):
             - self.appointment_2: appointment yesterday
             - self.appointment_3: appointment ongoing
         """
+        self.clear_cache()
+
         self.initialize_account()
         self.initialize_categories()
         self.initialize_products()

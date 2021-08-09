@@ -35,6 +35,7 @@ class CustomerApiTests(TestCase):
             - self.category_2,
             - self.category_3,
         """
+        self.clear_cache()
 
         self.initialize_account()
         self.initialize_categories()

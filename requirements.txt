@@ -4,3 +4,4 @@ djangorestframework==3.12.4
 django-filter==2.4.0
 pytz
 django-cors-headers
+python-memcached

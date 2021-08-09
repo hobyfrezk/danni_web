@@ -1,9 +1,10 @@
 from rest_framework import serializers
-
+from accounts.api.serializers import UserSerializerWithProfileDetail
 from appointments.models import Appointment
-
+from employees.api.serializers import EmployeeSerializer
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    user = UserSerializerWithProfileDetail(source="cached_user")
     class Meta:
         model = Appointment
         fields = (

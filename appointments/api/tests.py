@@ -42,6 +42,7 @@ class AppointmentsTest(TestCase):
             - self.appointment_2: appointment yesterday
             - self.appointment_3: appointment ongoing
         """
+        self.clear_cache()
 
         self.initialize_account()
         self.initialize_categories()
@@ -92,15 +93,15 @@ class AppointmentsTest(TestCase):
 
         response = self.registered_client.get(retrieve_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
+        self.assertEqual(response.data["appointment"]["user"]["id"], self.registered_user.id)
 
         response = self.staff_client.get(retrieve_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
+        self.assertEqual(response.data["appointment"]["user"]["id"], self.registered_user.id)
 
         response = self.admin_client.get(retrieve_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
+        self.assertEqual(response.data["appointment"]["user"]["id"], self.registered_user.id)
 
     def test_client_create(self):
         data = {
@@ -115,7 +116,7 @@ class AppointmentsTest(TestCase):
 
         response = self.registered_client.post(APPOINTMENTS_URL, data)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data["appointment"]["user"], self.registered_user.id)
+        self.assertEqual(response.data["appointment"]["user"]["id"], self.registered_user.id)
         self.assertEqual(response.data["appointment"]["services"], [self.product_1.id, self.product_2.id])
         self.assertEqual(response.data["appointment"]["staff"], self.staff_user.staff.id)
 
